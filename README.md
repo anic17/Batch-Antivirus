@@ -1,4 +1,4 @@
-# Batch AntiVirus
+# Batch Antivirus
 
 In this repository you will find the best Batch-created Antivirus: Batch Antivirus! (BAV)
 We store the database and some antivirus files, not more, not less.
