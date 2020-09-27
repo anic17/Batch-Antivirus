@@ -23,7 +23,8 @@ Scanning is slow because it launches a different process for every file. We're t
 ## Does web protection register websites I visit?
 
 No, Batch Antivirus doesn't collect **any** data.  
-Privacy is always important for us.
+Privacy is always important for us. Batch Antivirus uses the command `netstat -no` to get active connections to the PC. Then it compares to the file `VirusDataBaseIP.bav` and if the IP is found, it's a malicious website.  
+So no, we don't collect any data.
 
 
 ## Hey! I accidentally downloaded some malware, where can I send SHA256 hash?
