@@ -7,9 +7,6 @@ md "%~dp0Data\Quarantine" > nul 2>&1
 set dir=%CD%
 set root_dir=C:\
 
-tasklist /fi "windowtitle eq Batch Antivirus Real-Time Protection" > nul 2>&1 && echo started || echo ok
-
-::&& echo.An instance of Batch Antivirus already started. && pause>nul && exit /b %errorlevel%
 echo Batch Antivirus Real-Time Protection Engine started
 timeout /t 1 /nobreak > nul
 title Batch Antivirus Real-Time Protection
