@@ -1,12 +1,13 @@
-:1.0.1
-:Updated 5/10/2020 20:29
+:1.0.2
+:Updated 18/10/2020 22:28
 :Do NOT modify and/or delete this file
 :This file contains information about malicious files and
-:if it is modified, BAV AV will NO longer detect malware.
+:if it is modified, Batch Antivirus will NO longer detect malware.
 :It is recomended to copy this file in a safe place
 :if a malware deletes it
 :
 :Copyright (c) 2020 anic17 Software
+:Licensed under GNU GPL v3.0
 :
 :Hashing
 :SHA256
@@ -2525,7 +2526,15 @@ f5913a44205bd7ae562d9e1ba1bcfd13de33a02675783caf353d2040458836aa:Adware/Android.
 
 084715d67b798c6a1f7a1149c3271f127760b213bab4e5214207ca5ed590e4b4:Worm/Win32.Mofksys
 
-446126f53cfd55affd3f8d711c525c86c07a3023a7306a1b14120c3b93d359c7:Spyware/TokenStealer
-7fb7a3155bbf44ea17cb2a92a70e65d1b6c5789aa7002ac5e7da988052f6d947:Spyware/TokenStealer
-44ddc9c0dfba2d26e29c302b6de7fd7cca7432e1ffdd37aaf32d6d039789e026:Spyware/TokenStealer
-38904729ba710d6f5f430491dace1da6a0a7439908153694723e114a6a79cd30:Spyware/TokenStealer
+446126f53cfd55affd3f8d711c525c86c07a3023a7306a1b14120c3b93d359c7:Spyware/DiscordTokenStealer
+7fb7a3155bbf44ea17cb2a92a70e65d1b6c5789aa7002ac5e7da988052f6d947:Spyware/DiscordTokenStealer
+44ddc9c0dfba2d26e29c302b6de7fd7cca7432e1ffdd37aaf32d6d039789e026:Spyware/DiscordTokenStealer
+38904729ba710d6f5f430491dace1da6a0a7439908153694723e114a6a79cd30:Spyware/DiscordTokenStealer
+cc36405aea8e5f36c2ed11387e890f47f8eeff4eb3eee2f5ebbb28a3f97f871e:Spyware/DiscordTokenStealer
+97c41b05b6d13b4afce2c0980a34fda067da978c8c4aef5fbc8f5656d99bca5c:Spyware/Batch.DiscordTokenStealer
+
+a9dfecf892de8d8f508889833317dd4697f41e4047afd3e8a3d44628c7615c78:Spyware/PasswordStealer
+26ff44fb364c50dacb27a96b35165954769dbafbe70b4240308c9bf0eb36662b:Spyware/PasswordStealer
+e12ae9536df2f0cdb515f2fa92d04f6386fd9c21ad95afdb3d3cb966fc56bae5:Spyware/PasswordStealer
+16da6adb0fed3c970831d3e6afe528b96022d0bf0c280864f1b901cd6526be35:Spyware/PasswordStealer
+182bd2f2e44573f5fe82dcfe201f07a81a9b55264794ae4ebc4e8f8d525c0d54:Spyware/PasswordStealer
