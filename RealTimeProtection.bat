@@ -121,7 +121,6 @@ goto :EOF
 
 :detection
 if "%~1" neq "%hash%" goto :EOF
-echo on
 call :getname "%filescan%"
 taskkill /f /im "%filescan_basename%" > nul 2>&1
 if "%showballoon%"=="1" start /b powershell [Reflection.Assembly]::LoadWithPartialName("""System.Windows.Forms""");$obj=New-Object Windows.Forms.NotifyIcon;$obj.Icon = [drawing.icon]::ExtractAssociatedIcon($PSHOME + """\powershell.exe""");$obj.Visible = $True;$obj.ShowBalloonTip(%balloon_notification_timeout%, """Batch Antivirus""","""Threats found: %~2""",2)>nul
@@ -137,7 +136,7 @@ set /a threats+=1
 echo.%filescan%
 
 if not exist "%filescan%" (if "%malware_message%"=="1" echo Malware successfully quarantined) else call :delete
-echo off
+
 goto :EOF
 
 :delete
