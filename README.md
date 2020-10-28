@@ -5,7 +5,7 @@ We store the database and antivirus components. Please ensure to download all fi
 
 ## Is Batch Antivirus good enough to use as a regular antivirus?
 
-Sadly, answer is no. Batch Antivirus contains a small database (9000 hashes), so new malware isn't there. 
+Sadly, answer is no. Batch Antivirus contains a small database (40000 hashes), so new malware isn't there. 
 We recomend using another antivirus such as Microsoft Defender or Malwarebytes.  
 But, if you can use real-time protection along Microsoft Defender, that will be safer.
 
