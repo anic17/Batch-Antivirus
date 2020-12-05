@@ -38,7 +38,7 @@ It checks for API/system calls and behaviour. It might be a false positive as it
 
 ## What I need to do if I want to use the database?
 
-You can distribute and sell programs along with database, but please credit us as it's not easy to make a such database searching a big part of the hashes manually.
+You can distribute programs along with database, but please credit us as it's not easy to make a such database searching a big part of the hashes manually.
 
 
 
