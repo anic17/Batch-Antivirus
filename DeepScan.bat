@@ -1,11 +1,10 @@
 ::BAV_:git@github.com:anic17/Batch-Antivirus.git
-
-@echo off
+@echo on
 if "%~f1"=="%~f0" echo Safe file (Whitelisted). && exit /b
 setlocal EnableDelayedExpansion
 set dir=%CD%
 path=%PATH%;%CD%
-set ver=0.1.0
+set ver=1.1
 set report=1
 set "string[severe]=Severe malware found."
 set "string[malware]=Malware found."
@@ -55,7 +54,14 @@ if "%head%"=="::BAV_:git@github.com:anic17/Batch-Antivirus.git" (
 )
 
 
-findstr /i /c:"%%0|%%0" /c:"%%~f0|%%~f0" /c:"%%~dpnx0|%%~dpnx0" /c:"%%~f0|%%0" /c:"%%0|%%~f0" /c:"%%~dpnx0|%%~f0" /c:"%%~f0|%%~dpnx0" "%filescan%" > nul 2>&1 && echo.!string[malware]! && exit /b
+findstr /r /i /c:"%%.*0.*|.*%%.*0" "%filescan%" && (
+	echo.!cr!Scan finished.  
+	echo.
+	echo.Malware found: DoS/ForkBomb [Windows]
+	exit /b
+)
+	
+/c:"%%~f0|%%~f0" /c:"%%~dpnx0|%%~dpnx0" /c:"%%~f0|%%0" /c:"%%0|%%~f0" /c:"%%~dpnx0|%%~f0" /c:"%%~f0|%%~dpnx0" "%filescan%" > nul 2>&1 && echo.!string[malware]! && exit /b
 if not exist "%filescan%" (
 	echo.Could not find '%filescan%'
 	exit /b 1
@@ -169,8 +175,6 @@ goto :EOF
 
 set "in2=@if defined"
 set "batch_=_out"
-
-
 findstr /ic:"%in2%%batch_% %%%%~G" "%filescan%" > nul 2>&1 && (set "in2batch=1") || (set "in2batch=0")
 
 for /f %%A in ('gethex.exe "%filescan%" 100') do set "head=%%A"
@@ -178,9 +182,9 @@ if /i "%head:~0,2%"=="feff" set "obfuscated=1"&set "obfc=FE FF"
 if /i "%head:~0,2%"=="fffe" set "obfuscated=1"&set "obfc=FF FE"
 if /i "%head:~0,4%"=="fffe0000" set "obfuscated=1"&set "obfc=FF FE 00 00"
 
-if "%head:~0,4%"=="ÿþ  " set "obfuscated=1"&set "ofc=FF FE 00 00"&set "extra_info=FF FE 00 00"
-if "%head:~0,2%"=="þÿ" set "obfuscated=1"&set "obfc=FE FF"&set "extra_info=FE FF"
-if "%head:~0,2%"=="ÿþ" set "obfuscated=1"&set "obfc=FF FE"&set "extra_info=FF FE"
+if "%head:~0,4%"=="ï¿½ï¿½  " set "obfuscated=1"&set "ofc=FF FE 00 00"&set "extra_info=FF FE 00 00"
+if "%head:~0,2%"=="ï¿½ï¿½" set "obfuscated=1"&set "obfc=FE FF"&set "extra_info=FE FF"
+if "%head:~0,2%"=="ï¿½ï¿½" set "obfuscated=1"&set "obfc=FF FE"&set "extra_info=FF FE"
 if "%head:~0,4%"==":BFP" set bfp=1
 if "%head:~0,2%"=="MZ" (echo You are reading a binary file.&exit/B)
 if "%BFP%"=="1" set head=
@@ -216,7 +220,7 @@ if "%head%"=="3a3a4241565f3a676974406769746875622e636f6d3a616e696331372f42617463
 	echo.Safe file.
 	exit /b 0
 )
-set "mk_key=YÎf¿mzkkmt-Yiika"
+set "mk_key=Yï¿½fï¿½mzkkmt-Yiika"
 set "text="
 for %%A in (4=12=8,13;7,15=9=5,) do set "text=!text!!mk_key:~%%A,1!"
 set ratio=0
@@ -230,26 +234,29 @@ set "bcde=bcded"
 set "vssa=vssadm"
 
 
-findstr /vc:"echo" /vc:":" /ivc:"rem" "%filescan%" | findstr /i /c:"*\.*\.*\.*" /c:"http://" /c:"www\." /c:"https://" /c:"ftp://" /c:"sftp://" /c:"cURL" /c:"wget" /c:"Invoke-WebRequest" /c:"bitsadmin" /c:"certutil -urlcache" /c:"createobject(\"Microsoft\.XMLHTTP\")"> nul 2>&1 && set /a ratio+=1 && set "report_http_ftp=Contacts an FTP server/makes an HTTP request (+1^)"
+findstr /vc:"echo" /vc:":" /ivc:"rem" "%filescan%" | findstr /i /c:"*\.*\.*\.*" /c:"http://" /c:"www\." /c:"https://" /c:"ftp://" /c:"sftp://" /c:"cURL" /c:"wget" /c:"Invoke-WebRequest" /c:"bitsadmin" /c:"certutil -urlcache" /c:"createobject(\"Microsoft\.XMLHTTP\")"> nul 2>&1 && set /a ratio+=3 && set "report_http_ftp=Contacts an FTP server/makes an HTTP request (+3^)"
 findstr /i /c:"del *" /c:"del %%HomeDrive%%\*" /c:"erase %HomeDrive%" /c:"erase %%HomeDrive%%\*" "%filescan%" > nul 2>&1 && set /a ratio+=3 && set "report_delete=Deletes files (+3^)"
 
 findstr /vic:"echo" "%filescan%" | findstr /bic:"%pn%g " /c:"%pn%g.exe ">nul 2>&1 && set /a ratio+=1 && set "report_ping=Pings website/IP (+1^)"
-findstr /vic:"echo" "%filescan%" | findstr /bic:"%ic%ls " /c:"%ic%ls.exe ">nul 2>&1 && set /a ratio+=1 && set "report_icacls=Changes ACL of a file or directory (+1^)"
-findstr /vic:"echo" "%filescan%" | findstr /bic:"%sch%sks " /c:"%sch%sks.exe ">nul 2>&1 && set /a ratio+=1 && set "report_schtasks=Modifies scheduled tasks (+1^)"
-findstr /vic:"echo" "%filescan%" | findstr /bic:"%net%h " /c:"%net%h.exe " >nul 2>&1 && set /a ratio+=1 && set "report_netsh=Runs network shell to edit or get configuration (+1^)"
+findstr /vic:"echo" "%filescan%" | findstr /bic:"%ic%ls " /c:"%ic%ls.exe ">nul 2>&1 && set /a ratio+=1 && set "report_icacls=Changes ACL of a file or directory (+5^)"
+findstr /vic:"echo" "%filescan%" | findstr /bic:"%sch%sks " /c:"%sch%sks.exe ">nul 2>&1 && set /a ratio+=1 && set "report_schtasks=Modifies scheduled tasks (+5^)"
+findstr /vic:"echo" "%filescan%" | findstr /bic:"%net%h " /c:"%net%h.exe " >nul 2>&1 && set /a ratio+=1 && set "report_netsh=Runs network shell to edit or get configuration (+3^)"
 findstr /vic:"echo" "%filescan%" | findstr /bic:"psexec " /c:"%psx%c." /c:"%psx%c64 " /c:"%psx%c64." >nul 2>&1 && set /a ratio+=1 && set "report_psexec=Uses PSExec to run remote commands"
 
+
 :: Find Mimikatz string (encoded to evit self-false positives)
-findstr /ic:"!text:_=-!" "%filescan%" > nul 2>&1 && set /a ratio+=5 && set "report_mimikatz=Uses HackTool/Mimikatz  (+5^)"
-findstr /ic:"%vssa%in " "%filescan%" > nul 2>&1 && set /a ratio+=1 && set "report_vssadmin=Uses VSSAdmin command to manage shadow copies (+1^)"
-findstr /ic:"%bcded%it " "%filescan%" > nul 2>&1 && set /a ratio+=1 && set "report_bcdedit=Uses BCDEdit command to edit boot configuration data (+1^)"
-findstr /bvc:"echo" /vc:":" /ivc:"rem" /bvc:"echo" "%filescan%" 2>nul | findstr /ic:"taskkill /f /im " /c:"taskkill /im" /c:"taskkill /fi" /c:"taskkill /pid" /c:"taskkill /f" /c:"pskill " /c:"pskill.exe" /c:"pskill64 " /c:"tskill " /c:"tskill.exe" "%filescan%" > nul 2>&1 && set /a ratio+=1 && set "report_taskkill=Finishes processes (+1^)" && findstr /i /c:"csrss" /c:"wininit" /c:"svchost" /c:"services" /c:"explorer" /c:"msmpeng" /c:"%filescan%" > nul 2>&1 && set /a ratio+=5 && set "report_taskkill_critical=Finishes system critical processes (+5^)"
+findstr /ic:"!text:_=-!" "%filescan%" > nul 2>&1 && set /a ratio+=20 && set "report_mimikatz=Uses HackTool/Mimikatz  (+25^)"
+findstr /ic:"%vssa%in " "%filescan%" > nul 2>&1 && set /a ratio+=10 && set "report_vssadmin=Uses VSSAdmin command to manage shadow copies (+10^)"
+findstr /ic:"%bcde%it " "%filescan%" > nul 2>&1 && set /a ratio+=10 && set "report_bcdedit=Uses BCDEdit command to edit boot configuration data (+10^)"
+
+findstr /ic:"taskkill /f /im " /c:"taskkill /im" /c:"taskkill /fi" /c:"taskkill /pid" /c:"taskkill /f" /c:"pskill " /c:"pskill.exe" /c:"pskill64 " /c:"tskill " /c:"tskill.exe" "%filescan%" > nul 2>&1 && set /a ratio+=1 && set "report_taskkill=Finishes processes (+2^)" && findstr /ic:"csrss" /c:"wininit" /c:"svchost" /c:"services" /c:"explorer" /c:"msmpeng" "%filescan%" > nul 2>&1 && set /a ratio+=5 && set "report_taskkill_critical=Finishes system critical processes (+10^)"
 
 echo.!cr!Scan finished.   
+if %ratio% geq 41 set ratio=40
 echo.
 if "%report%" equ "1" (
 	echo Batch Antivirus report:
-	echo.
+	echo.	
 	if %ratio% equ 0 echo No suspicious indicators found.
 	if defined report_bcdedit echo.%report_bcdedit%
 	if defined report_delete echo.%report_delete%
@@ -273,7 +280,7 @@ if "%report%" equ "1" (
 		echo.
 	)
 	echo.
-	echo Ratio: %ratio%/20
+	echo Ratio: %ratio%/40
 	echo.
 	<nul set /p "=Veridict: "
 )
@@ -283,20 +290,20 @@ if "%report%" equ "1" (
 for %%A in (bcdedit delete http_ftp mimikatz ping icacls schtasks netsh taskkill taskkill_critical vssadmin psexec) do if defined report_%%A set ai_%%A=1
 
 	
-if %ratio% geq 18 (
+if %ratio% geq 33 (
 	echo.!string[severe]!
 	exit /b %ratio%
 )
-if %ratio% leq 17 if %ratio% geq 10 (
+if %ratio% leq 32 if %ratio% geq 17 (
 	echo.!string[malware]!
 	exit /b %ratio%
 )
 
-if %ratio% leq 9 if %ratio% geq 5 (
+if %ratio% leq 17 if %ratio% geq 8 (
 	echo.!string[possibly]!
 	exit /b %ratio%
 )
-if %ratio% leq 4 if %ratio% geq 1 (
+if %ratio% leq 7 if %ratio% geq 1 (
 	echo.!string[clean]!
 	exit /b %ratio%
 )
