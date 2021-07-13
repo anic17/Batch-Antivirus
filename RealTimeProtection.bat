@@ -219,7 +219,7 @@ reg query HKLM\SYSTEM\CurrentControlSet\Services > "%TMP%\batch_antivirus_servic
 
 checkdiff "%TMP%\batch_antivirus_servicelist.tmp" "%TMP%\batch_antivirus_servicelist2.tmp"
 
-for /f "usebackq delims=" %%A in (""%TMP%\batch_antivirus_scan_services.tmp") do (
+for /f "usebackq delims=" %%A in ("%TMP%\batch_antivirus_scan_services.tmp") do (
 	for /f "delims=" %%B in ('reg query "HKLM\SYSTEM\CurrentControlSet\Services\%%~A" ^| Findstr /ic:"ImagePath"') do call :engine "_%%~A"
 )
 goto scanservices
