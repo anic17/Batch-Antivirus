@@ -1,10 +1,10 @@
-::!BAV_
+::BAV_:git@github.com:anic17/Batch-Antivirus.git
 @echo off
 setlocal EnableDelayedExpansion
 set dir=%CD%
 path=%PATH%;%CD%
 set ver=0.1.0
-title Batch AntiVirus
+title Batch Antivirus
 if /i "%~1"=="--help" goto help
 set elements=files
 
@@ -22,19 +22,19 @@ if /i "%~2"=="--skip-update" (
 )
 
 :database_check
-echo Checking for database updates...
+::echo Checking for database updates...
 
 
 
-md "%TMP%\Batch-AntiVirus" 2>nul 1>nul
+::md "%TMP%\Batch-Antivirus" 2>nul 1>nul
 
-takeown /f "%TMP%\Batch-AntiVirus" 2>nul 1>nul
-icacls "%TMP%\Batch-AntiVirus" /setowner "%username%" 2>nul 1>nul
+::takeown /f "%TMP%\Batch-Antivirus" 2>nul 1>nul
+::icacls "%TMP%\Batch-Antivirus" /setowner "%username%" 2>nul 1>nul
 
-icacls "%TMP%\Batch-AntiVirus" /grant "%username%":(F,MA) /t 2>nul 1>nul
+::icacls "%TMP%\Batch-Antivirus" /grant "%username%":(F,MA) /t 2>nul 1>nul
 
-powershell -Command Invoke-WebRequest -Uri "https://raw.githubusercontent.com/anic17/Batch-AntiVirus/master/VirusDataBaseHash.bav" -OutFile "%TMP%\Batch-AntiVirus\VirusDataBaseHash.bav"
-rem for /f %%H in ('sha256 "%TMP%\Batch-AntiVirus\VirusDataBaseHash.bav"') do (set "hashnewdatabase=%%H")
+::powershell -Command Invoke-WebRequest -Uri "https://raw.githubusercontent.com/anic17/Batch-Antivirus/master/VirusDataBaseHash.bav" -OutFile "%TMP%\Batch-Antivirus\VirusDataBaseHash.bav"
+rem for /f %%H in ('sha256 "%TMP%\Batch-Antivirus\VirusDataBaseHash.bav"') do (set "hashnewdatabase=%%H")
 rem for /f %%H in ('sha256 "VirusDataBaseHash.bav"') do (set "hasolddatabase=%%h")
 
 rem if /i "%hashnewdatabase%" neq "%hasolddatabase%" (
@@ -44,7 +44,7 @@ rem ) else (
 rem 		echo No update found
 rem )
 
-net session 2>nul 1>nul || set admin=0
+net session > nul 2>&1 || set admin=0
 if !admin!==0 (
 	echo Looks like you are running Antivirus without administrator permissions...
 	echo.
@@ -64,7 +64,9 @@ if "%~1" neq "" cd /d "%~1"
 if /i "%~1"=="--current-dir" cd /d "%current_dir%"
 
 call :reg_scan
-for /r %%a in (*.*) do call :scan "%%~a" 2> nul
+for /f "delims=" %%A in ('dir /s /b /ad') do call :scan "%%~a" 2>nul
+
+for /d %%a in (*.*) do call :scan "%%~a" 2> nul
 :finished
 echo Scan finished.
 echo.
@@ -77,8 +79,8 @@ exit /B %errorlevel%
 :scan
 title Scanning now: %* ; !scanned_files! scanned %elements%, !threats! threat(s) found
 set filescan=%*
-for /f %%A in ('sha256.exe "%~1" 2^>nul') do (call :hashed %%A)
-set /a scanned_files+=1
+for /f %%A in ('sha256.exe "%~1\" 2^>nul') do (call :hashed %%A)
+rem set /a scanned_files+=1
 goto :EOF
 
 :hashed
@@ -123,7 +125,7 @@ echo.
 echo Syntax:
 echo.
 echo BAV "[folder]"
-echo BAV [--switch]
+echo BAV ^<switch^>
 echo.
 echo Examples:
 echo.
@@ -147,11 +149,11 @@ echo BAV --help
 echo Will show this message
 echo.
 echo.
-echo Batch AntiVirus will check at every startup new database updates to guarantee
+echo BatchAntivirus will check at every startup new database updates to guarantee
 echo that you have always the most updated database
 echo.
 echo Official GitHub repository:
-echo https://github.com/anic17/Batch-AntiVirus
+echo https://github.com/anic17/Batch-Antivirus
 echo.
 echo If you accidentally downloaded some malware or PUP, contact batch.antivirus@gmail.com
 echo and send the potentially malicious file via Mega, Dropbox, Google Drive, Mediafire or OneDrive.
