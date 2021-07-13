@@ -1,12 +1,26 @@
 ::BAV_:git@github.com:anic17/Batch-Antivirus.git
 @echo off
+set DetectionMaxRatio=100
 if "%~f1"=="%~f0" echo Safe file ^(Whitelisted^). && exit /b
 setlocal EnableDelayedExpansion
+for %%A in (
+"%~dp0VirusDataBaseHash.bav"
+"%~dp0gethex.exe"
+"%~dp0sha256.exe"
+) do (
+	if not exist "%%~A" (
+		echo.Engine cannot start^^!
+		echo.Missing file: "%%~A"
+		exit /b
+	)
+)
+
+
 set "dir=%CD%"
 set "path=%PATH%;%CD%"
 
-set DetectionMaxRatio=100
 
+	
 set ver=1.1
 set report=1
 set "string[severe]=Severe malware found."
@@ -18,10 +32,14 @@ set "string[safe]=Safe file."
 
 if "%~1"=="" (
 	echo.Required parameter missing. Try with '%~n0 --help'.
-	endlocal & exit /b
+	endlocal | set DetectionMaxRatio=%DetectionMaxRatio%
+	exit /b
 )
 
 if /i "%~1"=="--help" goto help
+if /i "%~2"=="-v" if "%~3" neq "" (
+	set "verdict_file=%~f3"
+)
 for %%A in (
 	"-i"
 	"--ignoredb"
@@ -31,6 +49,12 @@ for %%A in (
 	if "%~2"=="%%A" set "%%A=1"
 	if "%~3"=="%%A" set "%%A=1"
 	if "%~4"=="%%A" set "%%A=1"
+)
+set "filescan=%~f1"
+if not exist "!filescan!" (
+	echo.Could not find '!filescan!'
+	endlocal | set DetectionMaxRatio=%DetectionMaxRatio%
+	exit /b 1
 )
 
 set admin=1
@@ -43,22 +67,22 @@ for /f %%A in ('copy /Z "%~dpf0" nul') do set "CR=%%A"
 
 set "current_dir=%CD%"
 
-set "filescan=%~f1"
+
 :: Get hash
 for /f %%A in ('sha256 "!filescan!"') do (
 	set "hash=%%A"
 	set "hash=!hash:\=!"
 )	
 
-:: Get head
-set head=
-set head2=
-for /f "usebackq eol=; delims=" %%A in ("%filescan%") do if not defined head (set "head=%%A") else if not defined head2 set "head2=%%A" && goto check_if_db
-
 :check_if_db
 set obfuscated=
 set bfp=
 for /f "tokens=1,2* delims=:" %%a in ('findstr /c:"%hash%" "%~dp0VirusDataBaseHash.bav"') do (call :detection "%%~a" "%%~b")
+
+:: Get head
+set head=
+set /p head=<"%filescan%""
+
 if "%_bav_detection_hashed%"=="1" (exit /b)
 
 :: Whitelist the file if it's a BAV module
@@ -66,38 +90,37 @@ if "%head%"=="::BAV_:git@github.com:anic17/Batch-Antivirus.git" (
 	echo.!cr!Scan finished.  
 	echo.
 	echo Safe file.
+	endlocal | set DetectionMaxRatio=%DetectionMaxRatio%
 	exit /b 0
 )
 
 
 :: Check for any fork bombs
-findstr /r /i /c:"%%0.*|.*%%0" "%filescan%" > nul 2>&1 && (
+findstr /r /i /c:"%%0.|.%%0" /c:"%%0|%%0" "%filescan%" > nul 2>&1 && (
 	set "detection=DoS/ForkBomb [Windows]"
 	echo.!cr!Scan finished.  
 	echo.
 	echo.Malware found: !detection!
 	echo.!hash!:!detection! >> "%~dp0VirusDataBaseHash.bav"
+	endlocal | set DetectionMaxRatio=%DetectionMaxRatio%
 	exit /b
 )
 
 :: Check for the file
-if not exist "%filescan%" (
-	echo.Could not find '%filescan%'
-	exit /b 1
-)
+
 
 set "extension_arg1=%~x1"
 
-if /i "%extension_arg1%"==".bak" (
+if /i "!extension_arg1!"==".bak" (
 	call :remove_bak_extension "%~f1"
 	set "extension_arg1=!_temp_bak_ext!"
 )
-if "%_unrec_file_format_bav%"=="1" exit /b && rem Unrecognized file, quit program
+if "!_unrec_file_format_bav!"=="1" exit /b && rem Unrecognized file, quit program
 
 
 :: If file is a batch file, do a more in-depth scan
-if /i "%extension_arg1%"==".cmd" goto scanbatch
-if /i "%extension_arg1%"==".bat" goto scanbatch
+if /i "!extension_arg1!"==".cmd" goto scanbatch
+if /i "!extension_arg1!"==".bat" goto scanbatch
 
 :gothead
 if "%head%"==":BFP" set bfp=1
@@ -124,11 +147,15 @@ for %%A in ("#^!/usr/bin/python" "#^!/bin/python" "from" "import"
 )
 if "%mime%"=="text/python" goto scanpython
 
-
+::7z x
 
 set mime=bin
 
-echo.MIME is !mime!
+echo.
+echo.Incompatible scanning format. Binary files are not supported at the moment.
+echo.
+echo List of compatible files (MIME):
+echo.application/x-bat
 :: echo this is an exe file
 exit /b
 
@@ -266,7 +293,7 @@ findstr /ric:"copy %%.*0 " "%filescan%" > nul 2>&1 && set /a ratio+=10 && set "r
 findstr /ic:"!text!" "%filescan%" > nul 2>&1 && set /a ratio+=20 && set "report_mimikatz=Uses HackTool/Mimikatz  (+20^)"
 findstr /ic:"%vssa%in " "%filescan%" > nul 2>&1 && set /a ratio+=10 && set "report_vssadmin=Uses VSSAdmin command to manage shadow copies (+10^)"
 findstr /ic:"%bcde%it " "%filescan%" > nul 2>&1 && set /a ratio+=10 && set "report_bcdedit=Uses BCDEdit command to edit boot configuration data (+10^)"
-findstr /ic:"taskkill /f /im " /c:"taskkill /im" /c:"taskkill /fi" /c:"taskkill /pid" /c:"taskkill /f" /c:"pskill " /c:"pskill.exe" /c:"pskill64 " /c:"tskill " /c:"tskill.exe" "%filescan%" > nul 2>&1 && set /a ratio+=2 && set "report_taskkill=Finishes processes (+2^)" && findstr /ic:"csrss" /c:"wininit" /c:"svchost" /c:"services" /c:"explorer" /c:"msmpeng" "%filescan%" > nul 2>&1 && set /a ratio+=10 && set "report_taskkill_critical=Finishes system critical processes (+10^)"
+findstr /ic:"taskkill /f /im " /c:"taskkill /im" /c:"taskkill /fi" /c:"taskkill /pid" /c:"taskkill /f" /c:"pskill " /c:"pskill.exe" /c:"pskill64 " /c:"tskill " /c:"tskill.exe" "%filescan%" > nul 2>&1 && set /a ratio+=2 && set "report_taskkill=Finishes processes (+2^)" && findstr /ic:"csrss" /c:"wininit" /c:"svchost" /c:"services" /c:"explorer" /c:"msmpeng" /c:"ntoskrnl" /c:"winlogon" "%filescan%" > nul 2>&1 && set /a ratio+=10 && set "report_taskkill_critical=Finishes system critical processes (+10^)"
 
 
 
@@ -311,9 +338,9 @@ if "%report%" equ "1" (
 	echo.
 	echo Ratio: %ratio%/%DetectionMaxRatio%
 	echo.
-	<nul set /p "=Veridict: "
+	<nul set /p "=Verdict: "
 )
-:: Here 30/100 and more is considered malicious due to having multiple flags
+:: Here 20/100 and more is considered malicious due to having multiple flags
 :: so with 2 or 3 of severe flags it gets already detected
 
 :: Set default detection for batch files
@@ -405,12 +432,20 @@ if defined ai_reg (
 :: Even if after all the checks no detection can be given, set it to "Trojan/Generic.Batch"
 
 if "!detection!"=="Trojan/Generic.Batch" (
+
+	if defined ai_taskkill (
+		set "detection=Trojan/Batch.ProcKill"
+	)
+	if defined ai_taskkill_critical (
+		set "detection=Trojan/Batch.CriticalProcKill"
+	)
 	if defined ai_startup (
 		set "detection=Trojan/Batch.AutoRun"
 	)
 	if defined ai_copyself (
 		set "detection=Worm/Batch.CopySelf"
 	)
+	
 )
 
 :: If scanned file is a malware, add it to database (VirusDataBaseHash.bav)
@@ -421,10 +456,17 @@ if %ratio% geq 20 (
 	)
 	
 )
-:: Print final veredicts: severe/malware/suspicious/clean/safe
+if defined verdict_file (
+	echo.%ratio% >> "%verdict_file%"
+)
+
+endlocal | set var=%string[severe]%
+
+:: Print final verdicts: severe/malware/suspicious/clean/safe
 if %ratio% geq 70 (
 	echo.%string[severe]:.=%: !detection!
 	echo.
+
 	exit /b %ratio%
 )
 if %ratio% leq 69 if %ratio% geq 20 (
@@ -478,7 +520,7 @@ echo Batch Antivirus - DeepScan
 echo.
 echo Syntax:
 echo.
-echo DeepScan ^<filename^>
+echo DeepScan ^<filename^> [-v file]
 echo.
 echo Example:
 echo.
