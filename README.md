@@ -41,7 +41,7 @@ It checks for API/system calls and behaviour. It might be a false positive as it
 You can distribute programs along with database, but please credit us as it's not easy to make a such database searching a big part of the hashes manually.
 
 
-**Copyright &copy; 2021 anic17 Software**
+**Copyright &copy; 2022 anic17 Software**
 <!-- 
 View counter 
 -->
