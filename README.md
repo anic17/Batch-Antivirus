@@ -37,9 +37,9 @@ Send malicious hashes at batch.antivirus@gmail.com or [contact me](#contact)
 It checks for API/system calls and behaviour. It might be a false positive as it uses some suspicious API like CryptoAPI, used sometimes in ransomware.
 
 
-## What I need to do if I want to use the database?
+## What I need to do if I want to use a part of the antivirus?
 
-You can distribute programs along with database, but please credit me as it's not easy to make a such database searching a big part of the hashes manually.
+You can distribute programs that use Batch Antivirus, but please credit me as it's not easy to make a such database searching a big part of the hashes manually and making a real batch antivirus.
 
 ## Contact
 
