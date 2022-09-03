@@ -1,20 +1,26 @@
 ::BAV_:git@github.com:anic17/Batch-Antivirus.git
 @echo off
 setlocal EnableDelayedExpansion
+if "%~1"=="" (
+	echo.Missing arguments. This program shouldn't be run manually.
+	exit /b
+)
+if "%~f0"=="%~f1" (
+	echo.Cannot run this program recursively.
+	pause>nul
+	exit /b 0
+)
 set balloon_notification_timeout=100000
 set "command_args=%*"
 set "file=%~1"
-for /f %%A in ('sha256 "!file!"') do call :scan %%A
-exit /b
+call "%~dp0DeepScan.bat" "!file!" --verbose --novirustotal
+set ret_deepscan=%errorlevel%
 
-:scan
-set "hash=%~1"
-set "hash=!hash:~1!"
-findstr /c:"!hash!" "%~dp0VirusDataBaseHash.bav" > nul 2>&1 || (
-	!command_args!
-	exit /b
+if %ret_deepscan% lss 20 (
+	"!file!" !command_args!
+	exit /b %errorlevel%
 )
-for /f "tokens=1,2* delims=:" %%A in ('findstr /c:"%hash%" "%~dp0VirusDataBaseHash.bav"') do set "threat_name=%%B"
-
-powershell [Reflection.Assembly]::LoadWithPartialName("""System.Windows.Forms""");$obj=New-Object Windows.Forms.NotifyIcon;$obj.Icon = [drawing.icon]::ExtractAssociatedIcon($PSHOME + """\powershell.exe""");$obj.Visible = $True;$obj.ShowBalloonTip(%balloon_notification_timeout%, """Batch Antivirus""","""Threats found: %threat_name%""",2)>nul
-goto quit
+"%~dp0BAVConfig.bat"
+echo.Malware found: !file!
+pause>nul
+exit /b 0
