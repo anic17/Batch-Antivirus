@@ -25,10 +25,10 @@ set "files=BAV.bat BAVAutorun.bat BAVConfig.bat BAVDetail.bat BAVUpdate.bat Deep
 set "outdir=!TMP!\Batch-Antivirus"
 md "!outdir!" >nul 2>&1
 
-(curl -V > nul 2>&1 && set "hasCurl=1" ) || set "hasCurl=0"
+(curl -V > nul 2>&1 && set "hasCurl=1") || set "hasCurl=0"
 for %%A in ("database.ver" "BAVFiles.txt") do (
 	if exist "!outdir!\%%~A" del "!outdir!\%%~A" /q > nul 2>&1
-	call :download "%%~A" "!outdir!\database.ver" --silent
+	call :download "%%~A" "!outdir!\%%~A" --silent
 )
 if exist "!outdir!\BAVFiles.txt" set /p files=<"!outdir!\BAVFiles.txt"
 if not exist "!outdir!\database.ver" (
@@ -36,14 +36,14 @@ if not exist "!outdir!\database.ver" (
 	goto quit
 )
 
-set /p ver_online=<"!outdir!\database.ver"
 set /p ver_db=<"%~dp0VirusDataBaseHash.bav"
+set /p ver_online=<"!outdir!\database.ver"
 set "ver_online=!ver_online::=!"
 set "ver_db=!ver_db::=!"
 set orig_ver_db=!ver_db!
 set orig_ver_online=!ver_online!
 set "ver_online=!ver_online:.=!"
-set "ver_db=!ver_online:.=!"
+set "ver_db=!ver_db:.=!"
 echo.
 if !ver_db! geq !ver_online! (
 	echo.You're using the latest version of Batch Antivirus ^(v!orig_ver_db!^)
