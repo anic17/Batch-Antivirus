@@ -56,7 +56,7 @@ It checks for patterns usually found in malware. Although it's pretty accurate, 
 
 ## What I need to do if I want to use a part of the antivirus?
 
-You can distribute programs that use Batch Antivirus, but please credit me as it's not easy to make a such database searching a big part of the hashes manually and making a real batch antivirus.
+You can distribute programs that use Batch Antivirus, but please credit me and link this repository as it's not easy to make a such database searching a big part of the hashes manually and making a real batch antivirus.
 
 ## Contact
 
