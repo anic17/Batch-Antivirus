@@ -15,7 +15,7 @@ for %%A in (
 	)
 )
 
-set ver=3.0.0
+set ver=3.0.1
 set report=1
 set "string[severe]=Severe malware found."
 set "string[malware]=Malware found."
