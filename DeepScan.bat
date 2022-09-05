@@ -287,7 +287,7 @@ set "_strt=St!a%rt
 :: Here we're checking for URL requests, pings, file deletion, process killing, self-copy, etc.
 
 
-findstr /vc:"echo" /vc:":" /ivc:"rem" "!filescan!" | findstr /i /c:"*\.*\.*\.*" /c:"http://" /c:"www\." /c:"https://" /c:"ftp://" /c:"sftp://" /c:"cURL" /c:"wget" /c:"Invoke-WebRequest" /c:"bitsadmin" /c:"certutil -urlcache" /c:"createobject(\"Microsoft\.XMLHTTP\")"> nul 2>&1 && set /a ratio+=4 && set "report_http_ftp=Contacts an FTP server/makes an HTTP request (+3^)"
+findstr /vc:"echo" /vc:":" /ivc:"rem" "!filescan!" | findstr /i /c:"*\.*\.*\.*" /c:"http://" /c:"www\." /c:"https://" /c:"ftp://" /c:"sftp://" /c:"cURL" /c:"wget" /c:"Invoke-WebRequest" /c:"bitsadmin" /c:"certutil -urlcache" /c:"createobject(\"Microsoft\.XMLHTTP\")"> nul 2>&1 && set /a ratio+=4 && set "report_http_ftp=Contacts an FTP server/makes an HTTP request (+4^)"
 findstr /i /c:"del *" /c:"del %%HomeDrive%%\*" /c:"erase %HomeDrive%" /c:"erase %%HomeDrive%%\*" "!filescan!" > nul 2>&1 && set /a ratio+=3 && set "report_delete=Deletes files (+2^)"
 findstr /vic:"echo" "!filescan!" | findstr /bic:"%pn%g " /c:"%pn%g.exe ">nul 2>&1 && set /a ratio+=2 && set "report_ping=Pings website/IP (+2^)"
 findstr /vic:"echo" "!filescan!" | findstr /bic:"%ic%ls " /c:"%ic%ls.exe ">nul 2>&1 && set /a ratio+=4 && set "report_icacls=Changes ACL of a file or directory (+4^)"
