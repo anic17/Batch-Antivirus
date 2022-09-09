@@ -32,7 +32,7 @@ It can do a great job monitoring files, but if you really want a safe system you
 
 ## Does Batch Antivirus needs to be installed?
 
-No, Batch Antivirus can be used portably. Real time protection relies on folder changing and not on kernel drivers. Although it's not needed, it is recommended to run real-time protection (`RealTimeProtection.bat`) and drive scanner (`BAV.bat`).  
+No, Batch Antivirus can be used portably. Real time protection relies on folder changing and not on kernel drivers. Although it's not needed, it is recommended to run real-time protection (`RealTimeProtection.bat`) and drive scanner (`BAV.bat`) as an administrator to scan system files.  
 
 If you're willing to have a better security, consider adding Batch Antivirus as an autorun with [`BAVAutorun.bat`](https://github.com/anic17/Batch-Antivirus/blob/master/BAVAutorun.bat) and selection option 3 (shell).
 
