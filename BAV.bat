@@ -1,7 +1,7 @@
 ::BAV_:git@github.com:anic17/Batch-Antivirus.git
 @echo off
 setlocal EnableDelayedExpansion
-set ver=3.0.2
+set ver=3.0.3
 title Batch Antivirus Scanner
 if /i "%~1"=="--help" goto help
 
