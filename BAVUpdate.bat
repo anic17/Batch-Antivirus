@@ -35,7 +35,10 @@ if not exist "!outdir!\database.ver" (
 	echo Unable to retrieve latest version, are you connected to the internet?
 	goto quit
 )
-
+if not exist "%~dp0VirusDataBaseHash.bav" (
+	echo.No Batch Antivirus database found. Please redownload the program from the official GitHub.
+	goto quit
+)
 set /p ver_db=<"%~dp0VirusDataBaseHash.bav"
 set /p ver_online=<"!outdir!\database.ver"
 set "ver_online=!ver_online::=!"
