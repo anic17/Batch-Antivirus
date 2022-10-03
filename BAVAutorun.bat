@@ -4,33 +4,9 @@ setlocal EnableDelayedExpansion
 title Batch Antivirus autorun script
 echo.Batch Antivirus autorun script.
 echo.
-<nul set /p "=Checking Batch Antivirus file integrity... "
-for %%A in (
-	"%~dp0BAV.bat"
-	"%~dp0BAVDetail.bat"
-	"%~dp0DeepScan.bat"
-	"%~dp0InstallIntercept.bat"
-	"%~dp0Quarantine.bat"
-	"%~dp0RealTimeProtection.bat"
-	"%~dp0ScanIntercept.bat"
-	"%~dp0USBCleaner.bat"
-	"%~dp0USBScan.bat"
-	"%~dp0VirusDataBaseHash.bav"
-	"%~dp0VirusDataBaseIP.bav"
-	"%~dp0gethex.exe"
-	"%~dp0sha256.exe"
-	"%~dp0waitdirchange.exe"
-) do (
-	if not exist "%%~A" (
-		echo.
-		echo.Corrupt Batch Antivirus installation. Please redownload it from the official GitHub.
-		echo.https://github.com/anic17/Batch-Antivirus
-		pause>nul
-		endlocal
-		exit /b !errorlevel!
-	)
-)
-echo.done
+pushd "%~dp0"
+call "%~dp0BAVStatus.bat" --skip || exit /b
+
 echo.Searching for autorun installations...
 for %%# in ("HKCU" "HKLM") do (
 	reg query "%%~#\Software\Microsoft\Windows\CurrentVersion\Run" /v "BAVAutoRun" > nul 2>&1 && echo. - Found %%~# hive
@@ -117,6 +93,7 @@ echo.Deleted !deleted! out of !found! Batch Antivirus autoruns.
 echo.
 :quit
 echo.Press any key to quit...
+popd
 pause>nul
 endlocal
 exit /b !errorlevel!

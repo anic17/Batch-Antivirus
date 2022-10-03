@@ -28,19 +28,8 @@ for %%A in ("--help" "/?" "-?" "-h" "-help" "/help" "/h") do if /i "%~1"=="%%~A"
 	echo.Copyright ^(c^) 2022 anic17 Software
 	exit /b
 )
-for %%A in (
-"%~dp0VirusDataBaseHash.bav"
-"%~dp0sha256.exe"
-"%~dp0VirusDatabaseIP.bav"
-"%~dp0waitdirchange.exe"
-) do (
-	if not exist "%%~A" (
-		echo.Engine cannot start^^!
-		echo.Missing file: "%%~A"
-		exit /b
-	)
-)
 
+call "%~dp0BAVStatus.bat" --skip || exit /b
 call "%~dp0BAVConfig.bat"
 
 if not defined runningInBackground set runningInBackground=0
@@ -95,10 +84,8 @@ if /i "%~1"=="--autorun-userinit" (
 	exit /b
 )
 
-cd /d "%~dp0"
-
 call :killprot
-
+cd /d "%~dp0"
 if "%~1"=="--ip" goto scanip
 if "%~1"=="--pc-monitor" goto pcmonitor
 if "%~1"=="" (
