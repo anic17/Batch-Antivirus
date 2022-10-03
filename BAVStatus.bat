@@ -4,7 +4,11 @@ set skip=0
 if "%~1"=="--skip" set skip=1
 for %%A in (
 	"%~dp0BAV.bat"
+	"%~dp0BAVAutorun.bat"
+	"%~dp0BAVConfig.bat"
 	"%~dp0BAVDetail.bat"
+	"%~dp0BAVStatus.bat"
+	"%~dp0BAVUpdate.bat"
 	"%~dp0DeepScan.bat"
 	"%~dp0InstallIntercept.bat"
 	"%~dp0Quarantine.bat"
