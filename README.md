@@ -25,6 +25,8 @@ Official repository of Batch Antivirus. For a more in-depth explanation, go to [
  - File opening interception
  - VirusTotal analysis (On DeepScan)
 
+# Frequent Asked Questions
+
 ## Is Batch Antivirus good enough to use as a regular antivirus?
 
 Sadly, the answer is no. Batch Antivirus contains a small database (190k hashes). Although it may seem like it's a lot, it's not that much actually.
