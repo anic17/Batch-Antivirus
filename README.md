@@ -54,7 +54,7 @@ Contribute by creating a [pull request](https://github.com/anic17/Batch-Antiviru
 
 ## Why does heuristical analyzer detect legitimate programs?
 
-It checks for patterns usually found in malware. Although it's pretty accurate, some program can give false positives as they can have a suspicious behavior.
+Deep scanner checks for patterns usually found in malware. Even though it is pretty accurate, some programs may give false positives as some of the functions it uses can be used maliciously.
 
 ## What I need to do if I want to use a part of the antivirus?
 
@@ -66,7 +66,7 @@ Feel free to contact me on Discord (ID 684471165884039243)
 <a href="https://discord.gg/J628dBqQgb"><img src="https://img.shields.io/discord/728958932210679869?style=flat-square&logo=appveyor"></a>
 
 
-**Copyright &copy; 2022 anic17 Software**
+**Copyright &copy; 2023 anic17 Software**
 <!-- 
 View counter 
 -->
