@@ -34,6 +34,7 @@ for %%A in (
 "Ransom`This malware encrypts/locks all your files and asks for a ransom in order to decrypt/unlock them"
 "Rootkit`A very dangerous type of malware which is frequently installed in the UEFI to monitor the system from a very low level"
 "Spyware`This malware steals information from the user such as passwords and banking information"
+"Trojan-Spy`This malware steals information from the user such as passwords and banking information"
 "Trojan-Downloader`This malware downloads and runs another malware, which is usually more dangerous than the downloader"
 "Trojan-PSW`A variant of spyware, whose only purpose is to steal passwords and logins"
 "TrojanDropper`This malware drops and runs another malware, usually more dangerous which can perform any type of action"
