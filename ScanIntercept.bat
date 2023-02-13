@@ -3,6 +3,7 @@
 setlocal EnableDelayedExpansion
 if "%~1"=="" (
 	echo.Missing arguments. This program shouldn't be run manually.
+	pause>nul
 	exit /b
 )
 if "%~f0"=="%~f1" (
@@ -15,12 +16,12 @@ set "command_args=%*"
 set "file=%~1"
 call "%~dp0DeepScan.bat" "!file!" --verbose --novirustotal
 set ret_deepscan=%errorlevel%
-
 if %ret_deepscan% lss 20 (
 	"!file!" !command_args!
+	pause
 	exit /b %errorlevel%
 )
-"%~dp0BAVConfig.bat"
+call "%~dp0BAVConfig.bat"
 echo.Malware found: !file!
 pause>nul
 exit /b 0

@@ -25,7 +25,7 @@ for %%A in ("--help" "/?" "-?" "-h" "-help" "/help" "/h") do if /i "%~1"=="%%~A"
 	echo.RealTimeProtection --drive F:\
 	echo.Will monitor drive F:
 	echo.
-	echo.Copyright ^(c^) 2022 anic17 Software
+	echo.Copyright ^(c^) 2023 anic17 Software
 	exit /b
 )
 
