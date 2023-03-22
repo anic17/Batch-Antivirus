@@ -10,7 +10,7 @@ Official repository of Batch Antivirus. For a more in-depth explanation, go to [
  - Drive scanner
  - Auto-updater (both antivirus and databases)
  - Deep Scanning (for batch files)
- - 190k SHA256 hash database
+ - 192k SHA256 hash database
  - 313k IP database
  - USB Scanner for malware
  - USB shortcut malware remover
@@ -29,23 +29,23 @@ Official repository of Batch Antivirus. For a more in-depth explanation, go to [
 
 ## Is Batch Antivirus good enough to use as a regular antivirus?
 
-Sadly, the answer is no. Batch Antivirus contains a small database (190k hashes). Although it may seem like it's a lot, it's not that much actually.
-It can do a great job monitoring files, but if you really want a safe system you need to use another antivirus solution. Think of Batch Antivirus as an extra protection layer.
+Sadly, the answer is no. Batch Antivirus contains a small database (192k hashes). Although it may seem like it's a lot, the fact that new malware is appearing makes it very difficult to be up-to-date with the latest definitions.
+Batch Antivirus can do a great job monitoring files, but if you really want a safe system you need to use another antivirus solution. Think of Batch Antivirus as an extra protection layer.
 
 ## Does Batch Antivirus needs to be installed?
 
-No, Batch Antivirus can be used portably. Real time protection relies on folder changing and not on kernel drivers. Although it's not needed, it is recommended to run real-time protection (`RealTimeProtection.bat`) and drive scanner (`BAV.bat`) as an administrator to scan system files.  
+No, Batch Antivirus can be used portably. Real time protection relies on folder changing and not on kernel drivers. Although it's not needed, it is recommended to run real-time protection (`RealTimeProtection.bat`) and drive scanner (`BAV.bat`) with administrator privileges to scan system files.  
 
-If you're willing to have a better security, consider adding Batch Antivirus as an autorun with [`BAVAutorun.bat`](https://github.com/anic17/Batch-Antivirus/blob/master/BAVAutorun.bat) and selection option 3 (shell).
+If you're willing to have a better security, consider adding Batch Antivirus as an autorun with [`BAVAutorun.bat`](https://github.com/anic17/Batch-Antivirus/blob/master/BAVAutorun.bat) and selection option 3 (shell). Setting Batch Antivirus as your shell will run the protection before any other startup program.
 
 ## Why is scanning so slow?
 
-Scanning is slow because it launches a different process for every file. It has been optimized when scanning folders in real-time protection.
+Drive scanning is slow because of the slow nature of batch of launchng new processes. Nonetheless, it has been optimized when scanning folders in real-time protection.
 
 ## Does web protection register websites I visit?
 
 No, Batch Antivirus doesn't collect **any** data.  
-Privacy is always important. Batch Antivirus uses the command `netstat -no` to get active connections to the PC. Then it compares to the file `VirusDataBaseIP.bav` and if the IP is found, it's a malicious website. Nothing else.
+Privacy is always important. Batch Antivirus uses the command `netstat -no` to get the active TCP connections to the PC. Then they're searched on `VirusDataBaseHash.bav` database to check if it's a malicious website. Nothing else.
 
 ## I accidentally found some malware, where can I send you the SHA256 hash?
 
@@ -54,11 +54,11 @@ Contribute by creating a [pull request](https://github.com/anic17/Batch-Antiviru
 
 ## Why does heuristical analyzer detect legitimate programs?
 
-Deep scanner checks for patterns usually found in malware. Even though it is pretty accurate, some programs may give false positives as some of the functions it uses can be used maliciously.
+Deep scanner checks for patterns usually found in malware. Even though it has been adjusted to minimize false positives, some programs may give false positives as its behavior is similar to a malicious program.
 
 ## What I need to do if I want to use a part of the antivirus?
 
-You can distribute programs that use Batch Antivirus, but please credit me and link this repository as it's not easy to make a such database searching a big part of the hashes manually and making a real batch antivirus.
+You can distribute programs that use Batch Antivirus, but please credit me and link this repository. It helps giving more visibility to this project and it is highly appreciated
 
 ## Contact
 
