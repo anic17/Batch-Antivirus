@@ -4,7 +4,8 @@ setlocal EnableDelayedExpansion
 title Batch Antivirus threat detail
 echo.Batch Antivirus threat detail
 echo.
-set /p "threat_name=Threat name: "
+set "threat_name=%~1"
+if "%~1"=="" set /p "threat_name=Threat name: "
 
 findstr /ic:"!threat_name!" "%~dp0VirusDataBaseHash.bav "> nul 2>&1 || echo Threat not found in the database
 
@@ -35,6 +36,7 @@ for %%A in (
 "Rootkit`A very dangerous type of malware which is frequently installed in the UEFI to monitor the system from a very low level"
 "Spyware`This malware steals information from the user such as passwords and banking information"
 "Trojan-Spy`This malware steals information from the user such as passwords and banking information"
+"Trojan-RAT`This`program allows remote access to the computer which is installed by another person"
 "Trojan-Downloader`This malware downloads and runs another malware, which is usually more dangerous than the downloader"
 "Trojan-PSW`A variant of spyware, whose only purpose is to steal passwords and logins"
 "TrojanDropper`This malware drops and runs another malware, usually more dangerous which can perform any type of action"
