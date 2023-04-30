@@ -1,6 +1,7 @@
 ::BAV_:git@github.com:anic17/Batch-Antivirus.git
 @echo off
 set DetectionMaxRatio=100
+set ver=3.0.8
 if "%~f1"=="%~f0" echo Safe file ^(Whitelisted^). && exit /b
 setlocal EnableDelayedExpansion
 for %%A in (
@@ -15,7 +16,7 @@ for %%A in (
 	)
 )
 
-set ver=3.0.7
+
 set report=1
 set "string[severe]=Severe malware found."
 set "string[malware]=Malware found."
@@ -521,7 +522,7 @@ set ratio=0
 
 if "!verbose!"=="0" (
 	echo.!cr!Scan finished.  
-	echo.Warning: Python file scanning is incomplete!ç
+	echo.Warning: Python file scanning is incomplete!
 )
 findstr /c:"socket.socket(socket.AF_INET" "!filescan!" && (
 	if "!verbose!"=="0" echo Malware detected
@@ -549,7 +550,7 @@ echo Batch Antivirus - DeepScan
 echo.
 echo Syntax:
 echo.
-echo DeepScan ^<filename^> [-v ^<file^> |  --verbose]
+echo DeepScan ^<filename^> [-v ^<file^> ^|  --verbose] [--novirustotal]
 echo.
 echo Example:
 echo.
@@ -558,5 +559,5 @@ echo.
 echo Will return the malware detection code ^(0 means safe, %DetectionMaxRatio% means severe malware^)
 echo and will print the report
 echo.
-echo Copyright ^(c^) 2022 anic17 Software
+echo Copyright ^(c^) 2023 anic17 Software
 exit /b
