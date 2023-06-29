@@ -1,3 +1,0 @@
-# C files don't need to display on language count
-*.c
-*.h
