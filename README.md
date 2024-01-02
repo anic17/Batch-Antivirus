@@ -20,7 +20,7 @@ For a more in-depth explanation, go to [Batch Antivirus webpage](https://anic17.
  - Real-time web protection
  - PC Monitor, which checks for disk space & CPU temperature
  - Kill protection for real-time protection
- - Background real-time, starting before any other startup program (even explorer)
+ - Background real-time, starting before any other startup program (even `explorer.exe`)
  - Quarantine (files are encoded in base64 and locked)
  - Quarantine viewer
  - File opening interception
@@ -31,17 +31,17 @@ For a more in-depth explanation, go to [Batch Antivirus webpage](https://anic17.
 ## Is Batch Antivirus good enough to use as a regular antivirus?
 
 Sadly, the answer is no. Batch Antivirus contains a small database (192k hashes). Although it may seem like it's a lot, the fact that new malware is appearing makes it very difficult to be up-to-date with the latest definitions.
-Batch Antivirus can do a great job monitoring files, but if you really want a safe system you need to use another antivirus solution. Think of Batch Antivirus as an extra protection layer.
+Batch Antivirus can do a great job monitoring files, but if you want a safe system you need to use another antivirus solution. Think of Batch Antivirus as an extra protection layer.
 
-## Does Batch Antivirus needs to be installed?
+## Does Batch Antivirus need to be installed?
 
-No, Batch Antivirus can be used portably. Real time protection relies on folder changing and not on kernel drivers. Although it's not needed, it is recommended to run real-time protection (`RealTimeProtection.bat`) and drive scanner (`BAV.bat`) with administrator privileges to scan system files.  
+No, Batch Antivirus can be used portably. Real-time protection relies on folder changing and not on kernel drivers. Although it's not needed, it is recommended to run real-time protection (`RealTimeProtection.bat`) and the drive scanner (`BAV.bat`) with administrator privileges to scan system files.  
 
-If you're willing to have a better security, consider adding Batch Antivirus as an autorun with [`BAVAutorun.bat`](https://github.com/anic17/Batch-Antivirus/blob/master/BAVAutorun.bat) and selection option 3 (shell). Setting Batch Antivirus as your shell will run the protection before any other startup program.
+If you're willing to have better security, consider adding Batch Antivirus as an autorun with [`BAVAutorun.bat`](https://github.com/anic17/Batch-Antivirus/blob/master/BAVAutorun.bat) and selection option 3 (shell). Setting Batch Antivirus as your shell will run the protection before any other startup program.
 
 ## Why is scanning so slow?
 
-Drive scanning is slow because of the slow nature of batch of launchng new processes. Nonetheless, it has been optimized when scanning folders in real-time protection.
+Drive scanning is slow because of the slow nature of batch of launching new processes. Nonetheless, it has been optimized when scanning folders in real-time protection.
 
 ## Does web protection register websites I visit?
 
@@ -53,13 +53,13 @@ Privacy is always important. Batch Antivirus uses the command `netstat -no` to g
 Contribute by creating a [pull request](https://github.com/anic17/Batch-Antivirus/pulls). Alternatively, you can send malicious hashes at batch.antivirus@gmail.com or [contact me](#contact)
 
 
-## Why does heuristical analyzer detect legitimate programs?
+## Why does the heuristical analyzer detect legitimate programs?
 
-Deep scanner checks for patterns usually found in malware. Even though it has been adjusted to minimize false positives, some programs may give false positives as its behavior is similar to a malicious program.
+The Deep scanner module checks for patterns usually found in malware. Even though it has been adjusted to minimize false positives, some programs may give false positives as their behavior may be similar to malicious programs.
 
-## What I need to do if I want to use a part of the antivirus?
+## What do I need to do if I want to use a part of the antivirus?
 
-You can distribute programs that use Batch Antivirus, but please credit me and link this repository. It helps giving more visibility to this project and it is highly appreciated
+You can distribute programs that use Batch Antivirus, but please credit me and link this repository. It helps give more visibility to this project and it is highly appreciated.
 
 ## Contact
 
@@ -67,7 +67,7 @@ Feel free to contact me on Discord (ID 684471165884039243)
 <a href="https://discord.gg/J628dBqQgb"><img src="https://img.shields.io/discord/728958932210679869?style=flat-square&logo=appveyor"></a>
 
 
-**Copyright &copy; 2023 anic17 Software**
+**Copyright &copy; 2024 anic17 Software**
 <!-- 
 View counter 
 -->
