@@ -70,7 +70,7 @@ You are allowed to distribute programs that utilize Batch Antivirus; however, pl
 
 ## Contact
 
-Feel free to contact me on Discord (ID 684471165884039243) or my server Program Dream.
+Feel free to contact me on Discord (ID 684471165884039243) or my server <a href="https://discord.gg/J628dBqQgb">Program Dream</a>.  
 <a href="https://discord.gg/J628dBqQgb"><img src="https://img.shields.io/discord/728958932210679869?style=flat-square&logo=appveyor"></a>
 
 
