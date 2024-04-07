@@ -1,8 +1,7 @@
 ::BAV_:git@github.com:anic17/Batch-Antivirus.git
 @echo off
 setlocal EnableDelayedExpansion
-title Batch Antivirus Updater
-echo Checking for updates...
+
 if /i "%~1"=="--help" (
 	echo.Batch Antivirus - Updater
 	echo.
@@ -15,12 +14,14 @@ if /i "%~1"=="--help" (
 	echo.BAVUpdate
 	echo.Will update Batch Antivirus to the latest version
 	echo.
-	echo Copyright ^(c^) 2022 anic17 Software
+	echo Copyright ^(c^) 2023 anic17 Software
 	exit /b
 )
+title Batch Antivirus Updater
+echo Checking for updates...
 set skipprompt=0
 if /i "%~1"=="--skip" set skipprompt=1
-set "files=BAV.bat BAVAutorun.bat BAVConfig.bat BAVDetail.bat BAVUpdate.bat DeepScan.bat InstallIntercept.bat Quarantine.bat RealTimeProtection.bat ScanIntercept.bat USBCleaner.bat USBScan.bat VirusDataBaseHash.bav VirusDataBaseIP.bav gethex.exe sha256.exe waitdirchange.exe"
+set "files=BAV.bat BAVAutorun.bat BAVConfig.bat BAVDetail.bat BAVUpdate.bat BAVWebsiteBlocker.bat DeepScan.bat InstallIntercept.bat Quarantine.bat RealTimeProtection.bat ScanIntercept.bat USBCleaner.bat USBScan.bat VirusDataBaseHash.bav VirusDataBaseIP.bav gethex.exe sha256.exe waitdirchange.exe update\UpdateScript.bat"
 
 set "outdir=!TMP!\Batch-Antivirus"
 md "!outdir!" >nul 2>&1
@@ -90,7 +91,7 @@ exit /b %errorlevel%
 
 :downloadnew
 echo.
-echo.Downloading version v!orig_ver_online!... Please don't close this window.
+echo.Downloading version v!orig_ver_online!... Please do not close this window.
 for %%A in (!files!) do (
 	echo.Downloading '%%A'...
 	call :download %%A "!outdir!\%%A" --progress-bar
@@ -101,7 +102,6 @@ for %%A in (!files!) do (
 		goto quit
 	)
 )
-echo.Downloaded files into "!outdir!"
 echo.
 echo.Applying update...
 md "%~dp0OldVersions\v!orig_ver_db!" > nul 2>&1
@@ -119,7 +119,7 @@ for %%A in (%files%) do (
 
 		<nul set /p "=Replacing file [!currfile!/!totalfiles!] (!percent!%%)!CR!"
 		move /y "%~dp0%%A" "%~dp0OldVersions\v!orig_ver_db!" > nul 2>&1
-		move "!outdir!\%%A" "%~dp0%%A" > nul 2>&1
+		move /y "!outdir!\%%A" "%~dp0%%A" > nul 2>&1
 	)
 )
 echo.

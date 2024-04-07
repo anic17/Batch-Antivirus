@@ -1,10 +1,10 @@
 ::BAV_:git@github.com:anic17/Batch-Antivirus.git
 @echo off
 for /f "tokens=1-3 delims=/" %%A in ('date /t') do set "date_=%%A%%B%%C"
-set "date_=!date_:-=!"
+set "date_=%date_:-=%"
 ::Start settings
 ::
-:: Don't mess up with settings, it might leave your system unprotected
+:: Don't mess up with settings, it might leave your system unprotected and vulnerable
 ::
 ::
 
@@ -24,11 +24,11 @@ set log_scanned=0
 set log_detected=1
 set stdout_log_scanned=0
 set stdout_log_detected=1
-set "logfile="%~dp0Batch-Antivirus_!date_!""	
+set logfile="%~dp0Batch-Antivirus"	
 
 :: Engine scanning settings
 set root_dir=%SystemDrive%\
-set dir_scan_freq=3
+set dir_scan_freq=15
 
 :: Quarantine/delete (Not recommended to change)
 set nodelete=0
@@ -40,6 +40,7 @@ set kill_process_ip=1
 
 :: Engine protection
 set kill_protection=0
+set enable_low_confidence=1
 set "kp_file=BAV_kp.vbs"
 
 set "chkss_pth=sec_kp_bav_rtp.tmp"

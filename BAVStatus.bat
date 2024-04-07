@@ -3,17 +3,17 @@
 set skip=0
 if "%~1"=="--skip" set skip=1
 for %%A in (
-	"%~dp0BAV.bat"
+	"%~dp0..\BAV.bat"
 	"%~dp0BAVAutorun.bat"
 	"%~dp0BAVConfig.bat"
 	"%~dp0BAVDetail.bat"
+	"%~dp0BAVDisk.bat"
 	"%~dp0BAVStatus.bat"
 	"%~dp0BAVUpdate.bat"
 	"%~dp0DeepScan.bat"
-	"%~dp0InstallIntercept.bat"
 	"%~dp0Quarantine.bat"
 	"%~dp0RealTimeProtection.bat"
-	"%~dp0ScanIntercept.bat"
+	"%~dp0BAVIntercept.bat"
 	"%~dp0USBCleaner.bat"
 	"%~dp0USBScan.bat"
 	"%~dp0VirusDataBaseHash.bav"
@@ -26,9 +26,11 @@ for %%A in (
 		echo.
 		echo.Corrupt Batch Antivirus installation. Please redownload it from the official GitHub.
 		echo.https://github.com/anic17/Batch-Antivirus
+		echo.
+		echo.Missing file: '%%~nxA'
 		pause>nul
 		endlocal
-		exit /b !errorlevel!
+		exit /b 1
 	)
 )
 echo.done

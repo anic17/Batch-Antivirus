@@ -6,17 +6,19 @@ echo.Batch Antivirus autorun script.
 echo.
 pushd "%~dp0"
 call "%~dp0BAVStatus.bat" --skip || exit /b
-
-echo.Searching for autorun installations...
+set found=0
+echo Searching for autorun installations...
 for %%# in ("HKCU" "HKLM") do (
-	reg query "%%~#\Software\Microsoft\Windows\CurrentVersion\Run" /v "BAVAutoRun" > nul 2>&1 && echo. - Found %%~# hive
+
+	reg query "%%~#\Software\Microsoft\Windows\CurrentVersion\Run" /v "BAVAutoRun" > nul 2>&1 && (echo. - Found %%~# hive & 	set found=1)
 )
 for /f "tokens=2* delims= " %%A in ('reg query "HKLM\Software\Microsoft\Windows NT\CurrentVersion\Winlogon" /v "Userinit"') do (
 		set "regshell=%%B"
 		set "regshell=!regshell:"=!"
-		if "!regshell!"=="%~dp0RealTimeProtection.bat --autorun-userinit" echo. - Found shell autorun
+		if "!regshell!"=="%~dp0RealTimeProtection.bat --autorun-userinit" (echo. - Found shell autorun && set found=1)
 	
 )
+if "!found!"=="0" echo No Batch Antivirus autoruns found
 echo.
 echo.This script will install Batch Antivirus real time protection when the computer starts.
 echo.It is highly recommended to run this script as an administrator.
