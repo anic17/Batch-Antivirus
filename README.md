@@ -45,7 +45,7 @@ Batch Antivirus provides effective file monitoring and common malware detection 
 
 ## Does Batch Antivirus need to be installed?
 
-No, Batch Antivirus can be used portably. Real-time protection relies on folder change monitoring and not on kernel drivers. Although it is not needed, running real-time protection (`RealTimeProtection.bat`) and the drive scanner (`BAV.bat`) with administrator privileges to scan system files is recommended.  
+No, Batch Antivirus can be used portably. Real-time protection relies on folder change monitoring and not on kernel drivers. Although not needed, running real-time protection (`RealTimeProtection.bat`) and the drive scanner (`BAV.bat`) with administrator privileges to scan system files is recommended.  
 If you're willing to have better security, consider adding Batch Antivirus as an autorun with [`BAVAutorun.bat`](https://github.com/anic17/Batch-Antivirus/blob/master/BAVAutorun.bat) and selection option 3 (shell). Setting Batch Antivirus as your shell will run the protection before any other startup program.
 
 ## Why is scanning so slow?
@@ -66,11 +66,11 @@ The Deep scanner module checks for patterns usually found in malware. Even thoug
 
 ## What do I need to do if I want to use a part of the antivirus?
 
-You are allowed to distribute programs that utilize Batch Antivirus; however, please ensure proper attribution by crediting me and providing a link to this repository and any other component used (such as the databases). Your support in promoting this project is greatly valued and contributes to its visibility. Thank you for your cooperation.
+You are allowed to distribute programs that use Batch Antivirus; however, please ensure proper attribution by crediting me and providing a link to this repository and any other component used (such as the databases). Your support in promoting this project is greatly valued and contributes to its visibility. Thank you for your cooperation.
 
 ## Contact
 
-Feel free to contact me on Discord (ID 684471165884039243) or my server <a href="https://discord.gg/J628dBqQgb">Program Dream</a>.  
+Feel free to contact me on Discord (@anic17) or my server <a href="https://discord.gg/J628dBqQgb">Program Dream</a>.  
 <a href="https://discord.gg/J628dBqQgb"><img src="https://img.shields.io/discord/728958932210679869?style=flat-square&logo=appveyor"></a>
 
 
