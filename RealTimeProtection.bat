@@ -25,78 +25,106 @@ for %%A in ("--help" "/?" "-?" "-h" "-help" "/help" "/h") do if /i "%~1"=="%%~A"
 	echo.RealTimeProtection --drive F:\
 	echo.Will monitor drive F:
 	echo.
-	echo.Copyright ^(c^) 2023 anic17 Software
+	echo.Copyright ^(c^) 2024 anic17 Software
 	exit /b
 )
 
-call "%~dp0BAVStatus.bat" --skip || exit /b
+
+if not defined runningInstances (
+	set runningInstances=1
+)
+if "%runningInstances%"=="1" (
+ 	call "%~dp0BAVStatus.bat" --skip || exit /b
+)
+set /a runningInstances+=1
+
+
 call "%~dp0BAVConfig.bat"
 
-if not defined runningInBackground set runningInBackground=0
+
+if not defined runningInBackground (
+	set runningInBackground=0
+)
 if "%~1"=="--autorun-userinit" set runningInBackground=1
 setlocal EnableDelayedExpansion
 
 md "%~dp0Data\Quarantine" > nul 2>&1
 set "dir=!CD!"
 
-if "%~1"=="--kill-protection" (
-	set "kill_protection=1"
-	for /l %%A in () do (
-		if not exist "!tmp!\!kp_file!" (
-			call :killprot
-		)
-		timeout /t 1 /nobreak > nul
-	)
-)
+if "%~1"=="--kill-protection" set kill_protection=1
+
+
+
 if exist "!TMP!\BAV_RTP_.tmp" if "%~1"=="" (
 	if "!kill_protection!"=="1" (
 		(tasklist /fi "imagename eq !chkss_pth!" | findstr /c:"=" > nul 2>&1 ) || goto no_instance_running
 	)
 	for /f "tokens=2,9 delims=," %%A in ('tasklist /fi "imagename eq cmd.exe" /v /fo:csv ^| findstr /c:"cmd.exe"') do (
 		if "%%~B"=="!bav_rt_title!" (
-			echo.An instance of Batch Antivirus Real-Time Protection in background is already running ^(PID %%~A^)
+			echo.An instance of Batch Antivirus Real-Time Protection is already running in background ^(PID %%~A^)
 			goto quit
 		) else (
 			del "!TMP!\BAV_RTP_.tmp" /q /f > nul 2>&1
 		)
 	)
 )
+
+if "!kill_protection!_"=="1_" (
+	if not exist "!tmp!\!kp_file!" call :killprot	
+)
+
 :no_instance_running
 if /i "%~1"=="--autorun-userinit" (
 	rem Start Batch Antivirus as a background process
 	(tasklist /fi "imagename eq explorer.exe" | findstr /c:"=" > nul 2>&1) && (
-		echo.Cannot use '--autorun-userinit': explorer.exe is already started
+		echo.Cannot use '--autorun-userinit': explorer.exe is already started.
+		echo.To start Batch Antivirus on system startup use 'BAVAutorun.bat' module.
 	) || (
 	
-	echo.Set objFSO=CreateObject^("Scripting.FileSystemObject"^)> "!TMP!\bav_hidden.vbs"
-	echo.BAVRTPFile="!TMP!\BAV_RTP_.tmp" >> "!TMP!\bav_hidden.vbs"
-	echo.Set objFile = objFSO.CreateTextFile^(BAVRTPFile,True^) >> "!TMP!\bav_hidden.vbs"
-	echo.createObject^(^"WScript.Shell^"^).Run ^"cmd.exe /c ^"^"%~f0^"^"^", vbHide, true >> "!TMP!\bav_hidden.vbs"
-	echo.If objFSO.FileExists^(BAVRTPFile^) Then >> "!TMP!\bav_hidden.vbs"
-	echo.     objFSO.DeleteFile^(BAVRTPFile^) >> "!TMP!\bav_hidden.vbs"
-	echo.End if >> "!TMP!\bav_hidden.vbs"
+		echo.Set objFSO=CreateObject^("Scripting.FileSystemObject"^)> "!TMP!\bav_hidden.vbs"
+		echo.BAVRTPFile="!TMP!\BAV_RTP_.tmp" >> "!TMP!\bav_hidden.vbs"
+		echo.Set objFile = objFSO.CreateTextFile^(BAVRTPFile,True^) >> "!TMP!\bav_hidden.vbs"
+		echo.createObject^("WScript.Shell"^).Run "cmd.exe /c ""%~f0""", vbHide, true >> "!TMP!\bav_hidden.vbs"
+		echo.If objFSO.FileExists^(BAVRTPFile^) Then >> "!TMP!\bav_hidden.vbs"
+		echo.     objFSO.DeleteFile^(BAVRTPFile^) >> "!TMP!\bav_hidden.vbs"
+		echo.End if >> "!TMP!\bav_hidden.vbs"
 
-		
-	start wscript.exe "!TMP!\bav_hidden.vbs"
-	rem As the shell got overwritten, run the userinit process
-	start "" "!SystemRoot!\System32\userinit.exe"
+			
+		start wscript.exe "!TMP!\bav_hidden.vbs"
+		rem As the shell got overwritten, run the userinit process
+		start "" "!SystemRoot!\System32\userinit.exe"
 	)
 	exit /b
 )
 
-call :killprot
 cd /d "%~dp0"
-if "%~1"=="--ip" goto scanip
-if "%~1"=="--pc-monitor" goto pcmonitor
+if "%~1"=="--ip" (
+	if "!display_eng_start!"=="1" echo Batch Antivirus Web Protection started	
+	goto scanip
+)
+if "%~1"=="--pc-monitor" (
+	if "!display_eng_start!"=="1" echo Batch Antivirus PC Monitor started	
+	goto pcmonitor
+)
+if "%~1"=="--process-scan" (
+	if "!display_eng_start!"=="1" echo Batch Antivirus Process Scanner started	
+	goto process_scan
+)
+
+if "%~1"=="--nokillprot" set kill_protection=0
 if "%~1"=="" (
 	call "%~dp0BAVUpdate.bat" --skip
 	start /b cmd.exe /c "%~f0" --ip
 	start /b cmd.exe /c "%~f0" --pc-monitor
+	start /b cmd.exe /c "%~f0" --process-scan
 )
 
 
 
-if "!kill_protection!"=="1" start /b cmd.exe /c "%~f0" --kill-protection
+if "!kill_protection!"=="1" (
+	call "%~dp0RealTimeProtection.bat" --kill-protection
+	exit /b
+)
 
 
 if /i "%~1"=="--drive" (
@@ -107,21 +135,23 @@ if "!display_eng_start!"=="1" echo Batch Antivirus Real-Time Protection Engine s
 title !bav_rt_title!
 :real_time
 set counter=0
-for /f "tokens=1* delims=:" %%A in ('WaitDirChange /ANY /s /f !root_dir!') do (
+for /f "tokens=1* delims=:" %%A in ('WaitDirChange /any /s /f C:\ ') do (
 	set /a counter+=1
-	if "%%~A" neq "WaitDirChg" call :engine "%%~B"
+	if "%%~A" neq "WaitDirChg" if errorlevel 0 call :engine "%%~B"
 
 
 	if !counter! geq !dir_scan_freq! (
 		call :engine "%%~A" "--dir" "%%~dpA"
+		set is_process=0
 		set counter=0
 	)
 )
 
 goto real_time
 
-:engine
+:engine <filescan> <[--dir]> <dirname>
 set "filescan=%~1"
+set "fs_basename=%~nx1"
 for /f "usebackq tokens=*" %%X in (`echo.!filescan!`) do set "filescan=%%X"
 if "%~2"=="--dir" (
 	set "scandir=%~3" 
@@ -145,12 +175,19 @@ for /f "tokens=1* delims=:" %%A in ('findstr /bc:"!hash!" "%~dp0VirusDataBaseHas
 exit /b
 
 :detection
-if "%~2"=="" exit /b
-if "!log_detected!"=="1" echo.!filescan! >> "!logfile!"
 
-for /f "delims=" %%A in ("!filescan!") do set "filescan_basename=%%~nxA"
-taskkill /f /im "!filescan_basename!" > nul 2>&1
-call :balloon "Threats found: %~2" "Batch Antivirus" Warning
+
+
+if "%~2"=="" exit /b
+
+set lowconf=0
+set "threatname=%~2"
+if "!enable_low_confidence!"=="1" 	if /i "!threatname:~-14!"==".LowConfidence" set lowconf=1
+
+if "!log_detected!"=="1" call :writelogfile "!filescan!"
+
+
+if "!lowconf!"=="0" call :balloon "Threats found: %~2" "Batch Antivirus" Warning
 echo Malware found: "!filescan!" ^(!hash!^) ^| %~2
 if "%noquarantine%"=="1" goto :EOF
 md "%~dp0Data\Quarantine\!hash!" > nul 2>&1
@@ -164,6 +201,8 @@ for /f "delims=" %%A in ("!filescan!") do echo.%%~fA >> "%~dp0\Data\Quarantine\!
 echo.%~2 > "%~dp0\Data\Quarantine\!hash!\detection"
 icacls "%~dp0Data\Quarantine\!hash!\!hash!" /deny "!username!":(RX,W,R,M,RD,WEA,REA,X,RA,WA) > nul 2>&1
 set /a threats+=1
+
+if "%is_process%"=="1" taskkill /f /im "!fs_basename!" > nul 2>&1 && (echo Successfully killed the malware process '!fs_basename!') || (echo Failed to kill the malware process '!fs_basename!')
 
 if not exist "!filescan!" (
 	if "%malware_message%"=="1" echo Malware successfully quarantined.
@@ -205,8 +244,8 @@ for /f "tokens=2,3 delims=:" %%A in ('netstat -no ^| findstr /vc:"127.0.0.1"') d
 	for /f "tokens=3 delims= " %%# in ("%%B") do (
 		set "process_id=%%#"
 	)
-	findstr /bc:"!ip!" "%~dp0VirusDataBaseIP.bav" > nul 2>&1 && (
-		call :malicious_ip "!ip!" "!process_id!"
+	for /f "tokens=1,2 delims= " %%X in ('findstr /bc:"!ip!" "%~dp0VirusDataBaseIP.bav" 2^>nul') do (
+		if "%%X" neq "" call :malicious_ip "!ip!" "!process_id!" "%%Y"
 	)
 )
 timeout /t !timeout_ip! /nobreak > nul 2>&1
@@ -214,7 +253,7 @@ timeout /t !timeout_ip! /nobreak > nul 2>&1
 
 goto scanip
 
-:malicious_ip <ip> <pid>
+:malicious_ip <ip> <pid> <db_string>
 for /f "tokens=1 delims= " %%B in ('tasklist /fi "pid eq %~2" ^| findstr /c:"%~2"') do (
 	if !errorlevel! neq 0 (
 		echo.Error while getting process name for '%~2' PID
@@ -223,22 +262,30 @@ for /f "tokens=1 delims= " %%B in ('tasklist /fi "pid eq %~2" ^| findstr /c:"%~2
 	)
 )
 
+set "message=Malicious IP connection: %~1"
+if "%~3" neq "" (
+	set message=Blocked website ^(%~3^)
+)
+
 if "!malicious_ip_old!" neq "%~1" if "!malicious_pid_old!" neq "%~2" (
 	if "%runningInBackground%"=="1" (
-		call :balloon "Malicious IP connection: %~1^___^&vbCrLf^&___Process: !malicious_ip_process!^___^&vbCrLf^&___PID: %~2" "Batch Antivirus" Warning
+		call :balloon "!message!^___^&vbCrLf^&___Process: !malicious_ip_process!^___^&vbCrLf^&___PID: %~2" "Batch Antivirus" Warning
 	) else (
-		call :balloon "Malicious IP connection: %~1`nProcess !malicious_ip_process!`nPID: %~2" "Batch Antivirus" Warning
+		call :balloon "!message!`nProcess !malicious_ip_process!`nPID: %~2" "Batch Antivirus" Warning
 	)
 )
-if "%kill_process_ip%"=="1" taskkill /f /pid %~2 > nul 2>&1 || echo Error while ending connection
+if "%kill_process_ip%"=="1" (
+	taskkill /f /pid %~2 > nul 2>&1 || echo Error while ending connection
+)
 
 
-echo.Malicious IP connection: %~1
+echo.!message!
 echo.Process name: !malicious_ip_process!
 echo.PID: %~2
 echo.
 set "malicious_ip_old=%~1"
 set "malicious_pid_old=%~2"
+call :writelogfile "!message!. Process name: !malicious_ip_process!, PID: %~2"
 exit /b
 
 :balloon <text> <title> <icontype>
@@ -252,7 +299,7 @@ if "%runningInBackground%"=="1" (
 	set "text=%~1"
 	set "text=!text:___="!"
 	echo.bav=msgbox^("!text!", !icontype!, "%~2"^) >"!TMP!\bav_msgbox.vbs"
-	echo.createObject^(^"WScript.Shell^"^).Run "wscript.exe //nologo ""!TMP!\bav_msgbox.vbs""", 1 > "!TMP!\bav_fg.vbs"
+	echo.createObject^("WScript.Shell"^).Run "wscript.exe //nologo ""!TMP!\bav_msgbox.vbs""", 1 > "!TMP!\bav_fg.vbs"
 	start wscript.exe //nologo "!TMP!\bav_fg.vbs"
 	exit /b
 )
@@ -290,29 +337,42 @@ if "!display_lowdisk!"=="1" (
 timeout /t 60 /nobreak > nul
 goto pcmonitor_loop
 
+:process_scan
+set is_process=1
+for /f "delims=" %%A in ('wmic process get ExecutablePath ^| findstr /vlc:"ExecutablePath" ^| sort /uniq') do for /f "delims=" %%B in ("%%A") do call :engine "%%~dpnxB"
+timeout /t 30 /nobreak > nul
+goto process_scan
+
 
 :killprot
 if "!kill_protection!"=="1" (
-	del "!TMP!\!kp_file!" /q > nul 2>&1
+	set "curfn=%~f0"
+	set "curfn=%curfn:(=^(%"
+	set "curfn=%curfn:)=^)%"
+	set "kargs=%*"
+	set "kargs=%kargs:(=^(%"
+	set "kargs=%kargs:)=^)%"
 	del "!TMP!\sec_kp_*" /q > nul 2>&1
 	copy /y "%~dp0sha256.exe" "!TMP!\!chkss_pth!" >nul 2>&1
 	start /b "" "!TMP!\!chkss_pth!" > nul 2>&1
-	echo On Error Resume Next > "!TMP!\!kp_file!"
-	echo Set BAVkpWMIe = GetObject^(^"winmgmts:^" _ >> "!TMP!\!kp_file!"
-	echo     ^& "{impersonationLevel=impersonate}!^\^\" ^& "." ^& "^\root^\cimv2"^) >> "!TMP!\!kp_file!"
-	echo.createObject^(^"WScript.Shell^"^).Run ^"cmd /c ""%~f0""", vbHide, 1 >> "!TMP!\!kp_file!"
-	echo do >> "!TMP!\!kp_file!"
-	echo Set kpProcList= BAVkpWMIe.ExecQuery _ >> "!TMP!\!kp_file!"
-	echo     ^(^"Select * from Win32_Process Where Name = ^'!chkss_pth!^'^"^) >> "!TMP!\!kp_file!"
-	echo If kpProcList.count ^< 1 then >> "!TMP!\!kp_file!"
-	echo.		createObject^(^"WScript.Shell^"^).Run ^"^"^"%~f0 %*^"^"^" >> "!TMP!\!kp_file!"
-	echo 		MsgBox "Batch Antivirus process got killed", 4112, "Batch Antivirus" >> "!TMP!\!kp_file!"
+	echo.On Error Resume Next > "!TMP!\!kp_file!"
+	echo.Set BAVkpWMIe = GetObject^("winmgmts:" _ >> "!TMP!\!kp_file!"
+	echo.    ^& "{impersonationLevel=impersonate}!^\^\" ^& "." ^& "^\root^\cimv2"^) >> "!TMP!\!kp_file!"
+	echo.createObject^("WScript.Shell"^).Run "cmd /c ""!curfn!""" >> "!TMP!\!kp_file!"
+	echo.do >> "!TMP!\!kp_file!"
+	echo.Set kpProcList= BAVkpWMIe.ExecQuery _ >> "!TMP!\!kp_file!"
+	echo.    ^("Select * from Win32_Process Where Name = '!chkss_pth!'"^) >> "!TMP!\!kp_file!"
+	echo.If kpProcList.count ^< 1 then >> "!TMP!\!kp_file!"
+	echo.		createObject^("WScript.Shell"^).Run """!curfn! !kargs!""" >> "!TMP!\!kp_file!"
+	echo.		MsgBox "Batch Antivirus process got killed", 4112, "Batch Antivirus" >> "!TMP!\!kp_file!"
 	echo.		WScript.Quit^(^) >> "!TMP!\!kp_file!"
-	echo End If >> "!TMP!\!kp_file!"
-	echo WScript.Sleep^(300^) >> "!TMP!\!kp_file!"
-	echo loop >> "!TMP!\!kp_file!"
+	echo.End If >> "!TMP!\!kp_file!"
+	echo.WScript.Sleep^(300^) >> "!TMP!\!kp_file!"
+	echo.loop >> "!TMP!\!kp_file!"
+	set kill_protection=0
 	start /min cmd.exe /c start "" wscript.exe //nologo "!TMP!\!kp_file!"
 	timeout /t 1 /nobreak > nul
+	echo Kill protection enabled
 )
 goto :EOF
 
@@ -322,3 +382,8 @@ echo.Press any key to quit..
 pause>nul
 endlocal
 exit /b
+
+:writelogfile <text>
+if not defined logfile set "logfile=%~dp0_Batch_Antivirus.log"
+echo.[!date! !time!] %~1 >> "%logfile%"
+goto :EOF

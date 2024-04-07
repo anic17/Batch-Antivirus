@@ -1,9 +1,10 @@
 ::BAV_:git@github.com:anic17/Batch-Antivirus.git
 @echo off
 set DetectionMaxRatio=100
-set ver=3.0.8
-if "%~f1"=="%~f0" echo Safe file ^(Whitelisted^). && exit /b
+
+if "%~f1"=="%~f0" echo Safe file ^(Whitelisted^). && exit /b 0
 setlocal EnableDelayedExpansion
+pushd "%~dp0"
 for %%A in (
 "%~dp0VirusDataBaseHash.bav"
 "%~dp0gethex.exe"
@@ -15,9 +16,11 @@ for %%A in (
 		exit /b
 	)
 )
-
+set /p bav_version=<"VirusDataBaseHash.bav"
+set "bav_version=!bav_version::=!"
 
 set report=1
+
 set "string[severe]=Severe malware found."
 set "string[malware]=Malware found."
 set "string[possibly]=Suspicious indicator in file."
@@ -28,30 +31,34 @@ set "string[safe]=Safe file."
 if "%~1"=="" (
 	echo.Required parameter missing. Try with '%~n0 --help'.
 	endlocal | set DetectionMaxRatio=%DetectionMaxRatio%
-	exit /b
+	popd
+	exit /b 1
 )
 
 set verbose=0
 
 if /i "%~1"=="--help" goto help
 if /i "%~2"=="--verbose" set verbose=1
+
 if /i "%~2"=="-v" if "%~3" neq "" (
 	set "verdict_file=%~f3"
 )
+
 for %%A in (
-	"-i"
-	"--ignoredb"
-	"-n"
-	"--noreport"
+	"ignoredb"
+	"noreport"
 ) do (
-	if "%~2"=="%%A" set "%%A=1"
-	if "%~3"=="%%A" set "%%A=1"
-	if "%~4"=="%%A" set "%%A=1"
+	rem '--ignoredb' and '--noreport' flags
+	if "%~2"=="--%%~A" set "%%~A=1"
+	if "%~3"=="--%%~A" set "%%~A=1"
 )
+
+if "%noreport%"=="1" set report=0
 set "filescan=%~1"
 if not exist "!filescan!" (
 	echo.Could not find '!filescan!'
 	endlocal | set DetectionMaxRatio=%DetectionMaxRatio%
+	popd
 	exit /b 1
 )
 
@@ -71,15 +78,17 @@ for /f %%A in ('sha256 "!filescan!"') do (
 	set "hash=%%A"
 	set "hash=!hash:\=!"
 )
-
-
-for /f "tokens=1* delims=:" %%a in ('findstr /c:"%hash%" "%~dp0VirusDataBaseHash.bav"') do (
-	if "%%a"=="%hash%" (
-		if "!verbose!"=="0" (
-			echo.!cr!Scan finished.  
-			echo Malware found: !filescan! ^| %%b
+if "!ignoredb!" neq "1" (
+	for /f "tokens=1* delims=:" %%a in ('findstr /c:"%hash%" "%~dp0VirusDataBaseHash.bav"') do (
+		if "%%a"=="%hash%" (
+			if "!verbose!"=="0" (
+				echo.!cr!Scan finished.  
+				echo Malware found: !filescan! ^| %%b
+				
+			)
+			popd
+			exit /b !DetectionMaxRatio!
 		)
-		exit /b !DetectionMaxRatio!
 	)
 )
 
@@ -99,12 +108,13 @@ if "!head!"=="3a3a4241565f3a676974406769746875622e636f6d3a616e696331372f42617463
 		echo Safe file.
 	)
 	endlocal | set DetectionMaxRatio=%DetectionMaxRatio%
+	popd
 	exit /b 0
 )
 
 if "%~3" neq "--novirustotal" (
-	set /a ksh="(0x116337>>0x0b)-2"
-	set "ak=4e3202fdbe953d628f650229af5b3eb49cd46b2d3bfe5546ae3c5fa48b554e0c"
+	set /a ksh="(0x1df00-0x07>>0x07)-0x04"
+	set "ak=4e3202fdbe!ksh!d628f650229af5b3eb49cd46b2d3bfe5546ae3c5fa48b554e0c"
 	curl "https://www.virustotal.com/api/v3/files/!hash!" --header "x-apikey: !ak!" --output "%TMP%\VTAPIQuery.tmp" --silent && (
 		findstr /c:"QuotaExceededError" /c:"NotFound" "%TMP%\VTAPIQuery.tmp" > nul 2>&1 && (
 			goto skipVT
@@ -122,7 +132,7 @@ if "%~3" neq "--novirustotal" (
 			set /a total=malicious + undetected
 			if "!verbose!"=="0" (
 				echo.
-				echo.File '%~1' ^(aka '!meaningful_name!'^) has !malicious!/!total! VirusTotal detections.
+				echo.File '!filescan!' ^(aka '!meaningful_name!'^) has !malicious!/!total! VirusTotal detections.
 			)
 		)
 	)
@@ -131,23 +141,27 @@ if "%~3" neq "--novirustotal" (
 :skipVT
 
 :: Check for any fork bombs using regular expressions
-findstr /r /i /c:"%%0.*|.*%%0" /c:"%%0|%%0" "!filescan!" > nul 2>&1 && (
-	set "detection=DoS/ForkBomb [Windows]"
+
+for /f "delims=" %%A in ("!filescan!") do set "extension_arg1=%%~xA"
+
+for %%A in (".exe" ".msc" ".dll" ".sys" ".ocx" ".drv" ".com" ."pif" ".pnf") do if /i "!extension_arg1!"=="%%~A" goto skipFB
+goto skipFB
+findstr /r /i /c:"%%0.*|.*%%0" /c:"%%0|%%0" /c:"%%0* *\\|* *%%0" "!filescan!"  > nul 2>&1 && (
+	set "detection=DoS/ForkBomb"
 	if "!verbose!"=="0" (
 		echo.!cr!Scan finished.  
 		echo.
 		echo.Malware found: !detection!
 	)
-	echo.!hash!:!detection! >> "%~dp0VirusDataBaseHash.bav"
+	rem echo.!hash!:!detection! >> "%~dp0VirusDataBaseHash.bav"
 	endlocal | set DetectionMaxRatio=%DetectionMaxRatio%
+	popd
 	exit /b
 )
 
-
+:skipFB
 :: Check for the file
 
-
-for /f "delims=" %%A in ("!filescan!") do set "extension_arg1=%%~xA"
 
 if /i "!extension_arg1!"==".bak" (
 	call :remove_bak_extension "%~f1"
@@ -158,11 +172,8 @@ if "!_unrec_file_format_bav!"=="1" exit /b && rem Unrecognized file, quit progra
 if /i "!extension_arg1!"==".cmd" goto scanbatch
 if /i "!extension_arg1!"==".bat" goto scanbatch
 
-
-
 :gothead
-
-for /f "usebackq delims=" %%A in ("!filescan!") do set "head=%%A"
+set /p head=<"!filescan!"
 
 set "head=!head:"=!"
 set "head=!head:&=!"
@@ -177,7 +188,7 @@ set "head_tok1=!head_tok1:@=!"
 set "head_tok2=!head_tok2:@=!"
 :: Check for file MIME
 if "%head%"==":BFP" set bfp=1
-for %%A in ("echo" "if exist" "shift" "prompt" "title" "setlocal" "echo off" "echo on" "for" "::") do if "%%~A"=="!head!" set "mime=application/x-bat"
+for %%A in ("echo" "if exist" "shift" "prompt" "title" "setlocal" "echo off" "echo on" "for" "::") do if "%%~A"=="%head%" set "mime=application/x-bat"
 if "!mime!"=="application/x-bat" goto scanbatch
 for %%A in ("#^!/usr/bin/python" "#^!/bin/python" "from" "import") do (
 	for %%B in (".py" ".pyc") do if /i "%~x1"=="%%~B" set "mime=text/python"
@@ -192,6 +203,7 @@ if "!verbose!"=="0" (
 	echo.
 	echo.Batch Antivirus can only heuristically analize batch files ^(.bat and .cmd^)
 )
+popd
 exit /b 0
 
 
@@ -200,11 +212,9 @@ exit /b 0
 :: Scan batch programs (MIME application/x-bat)
 
 :scanbatch
-set "in2=@if defined"
-set "batch_=_out"
 
 :: Check for In2Batch packed program
-findstr /ic:"%in2%!batch_! %%%%~G" "!filescan!" > nul 2>&1 && (set "in2batch=1") || (set "in2batch=0")
+findstr /ic:"@if defined%=% _out %%%%~G" "!filescan!" > nul 2>&1 && (set "in2batch=1") || (set "in2batch=0")
 
 :: Get program header to check for obfuscations & BFP packing
 :: BFP download:
@@ -214,19 +224,16 @@ findstr /ic:"%in2%!batch_! %%%%~G" "!filescan!" > nul 2>&1 && (set "in2batch=1")
 for /f %%A in ('gethex.exe "!filescan!" 100') do set "head=%%A"
 
 :: Different obfuscations (in hex): FE FF, FF FE, FF FE 00 00
-if /i "%head:~0,2%"=="feff" set "obfuscated=1"&set "obfc=FE FF"
-if /i "%head:~0,2%"=="fffe" set "obfuscated=1"&set "obfc=FF FE"
-if /i "%head:~0,4%"=="fffe0000" set "obfuscated=1"&set "obfc=FF FE 00 00"
+if /i "%head:~0,4%"=="feff" set "obfuscated=1"&set "obfc=FE FF"& set "extra_info=!obfc!"
+if /i "%head:~0,4%"=="fffe" set "obfuscated=1"&set "obfc=FF FE"& set "extra_info=!obfc!"
+if /i "%head:~0,8%"=="fffe0000" set "obfuscated=1"&set "obfc=FF FE 00 00"& set "extra_info=!obfc!"
 
-if "%head:~0,4%"=="fffe0000" set "obfuscated=1"&set "ofc=FF FE 00 00"&set "extra_info=FF FE 00 00"
-if "%head:~0,2%"=="feff" set "obfuscated=1"&set "obfc=FE FF"&set "extra_info=FE FF"
-if "%head:~0,2%"=="fffe" set "obfuscated=1"&set "obfc=FF FE"&set "extra_info=FF FE"
 
 :: BFP header in hex
-if "%head:~0,4%"=="3a424650" set bfp=1
+if "%head:~0,8%"=="3a424650" set bfp=1
 
 :: Windows binary files header in hex (MZ)
-if "%head:~0,2%"=="4d5a" (
+if "%head:~0,4%"=="4d5a" (
 	if "!verbose!"=="0" echo You are reading a binary file.
 	exit /b
 )
@@ -262,9 +269,9 @@ if /i "%head:~0,4%"=="fffe0000" set "obfuscated=1"&set "obfc=FF FE 00 00"
 
 set "mk_key=YIf. mzkkmt-Yiika"
 set "text="
-for %%A in (4=,12;=;;,8,13;7=:,15=9;;5) do set "text=!text!!mk_key:~%%A,1!"
+for %%A in (4=,12;=;;,8,13;7=:,15=9;;5) do set "mktz=!mktz!!mk_key:~%%A,1!"
 
-:: Some other obfuscation for BAV to not detect himself
+:: Some other obfuscation for BAV to not detect itself
 set ratio=0
 
 set "pn=pin"
@@ -275,42 +282,56 @@ set "psx=psexe"
 set "bcde=bcded"
 set "vssa=vssadm"
 set "re=eg"
+set "sysnf=ysteminf"
 
 set "curver=\\C%urrent!Version\\"
 set "hklmregclass=H%KLM\\Software\\Cla!sses"
 set "_mswin=Micr%osoft\\W!indows"
 set "_strt=St!a%rt
+set "wdf=ws De"
+set "ntivr=anti"
 
-:: FINDSTR detectio
-:: Looks for patterns and/or regular expressions
-:: Skips all lines starting by ECHO except for 2 because there was a weird bug
+:: FINDSTR detection
+:: Looks for patterns with regular expressions
+:: Skips all lines starting by ECHO to avoid detecting URL printing as a direct request for example
 :: 
 :: Here we're checking for URL requests, pings, file deletion, process killing, self-copy, etc.
 
 
-findstr /vc:"echo" /vc:":" /ivc:"rem" "!filescan!" | findstr /i /c:"*\.*\.*\.*" /c:"http://" /c:"www\." /c:"https://" /c:"ftp://" /c:"sftp://" /c:"cURL" /c:"wget" /c:"Invoke-WebRequest" /c:"bitsadmin" /c:"certutil -urlcache" /c:"createobject(\"Microsoft\.XMLHTTP\")"> nul 2>&1 && set /a ratio+=4 && set "report_http_ftp=Contacts an FTP server/makes an HTTP request (+4^)"
+findstr /vc:"echo" /ivc:"rem" "!filescan!" | findstr /i /c:"*\.*\.*\.*" /c:"http://" /c:"www\." /c:"https://" /c:"ftp://" /c:"sftp://" /c:"cURL" /c:"curl." /c:"curl " /c:"wget" /c:"Invoke-WebRequest" /c:"bitsadmin" /c:"certutil -urlcache" /c:"createobject(\"Microsoft\.XMLHTTP\")"> nul 2>&1 && set /a ratio+=4 && set "report_http_ftp=Contacts an FTP server/makes an HTTP request (+4^)"
 findstr /i /c:"del *" /c:"del %%HomeDrive%%\*" /c:"erase %HomeDrive%" /c:"erase %%HomeDrive%%\*" "!filescan!" > nul 2>&1 && set /a ratio+=3 && set "report_delete=Deletes files (+2^)"
-findstr /vic:"echo" "!filescan!" | findstr /bic:"%pn%g " /c:"%pn%g.exe ">nul 2>&1 && set /a ratio+=2 && set "report_ping=Pings website/IP (+2^)"
+findstr /bic:"%pn%g " /c:"%pn%g.exe " /c:"tracert " /c:"tracert.exe" "!filescan!" >nul 2>&1 && set /a ratio+=2 && set "report_ping=Pings website/IP (+2^)"
+findstr /vic:"echo" "!filescan!" | findstr /bic:"nslookup " /c:"nslookup.exe" >nul 2>&1 && set /a ratio+=5 && set "report_public_ip=Gets computer's public IP (+5^)"
 findstr /vic:"echo" "!filescan!" | findstr /bic:"%ic%ls " /c:"%ic%ls.exe ">nul 2>&1 && set /a ratio+=4 && set "report_icacls=Changes ACL of a file or directory (+4^)"
-findstr /vic:"echo" "!filescan!" | findstr /bic:"%sch%sks " /c:"%sch%sks.exe ">nul 2>&1 && set /a ratio+=4 && set "report_schtasks=Modifies scheduled tasks (+4^)"
-findstr /vic:"echo" "!filescan!" | findstr /bic:"%net%h " /c:"%net%h." /c:"ipconfig " /c:"ipconfig." /c:"net.">nul 2>&1 && set /a ratio+=3 && set "report_netsh=Changes network configuration ^(+3^)"
-findstr /vic:"echo" "!filescan!" | findstr /ic:"net session" >nul 2>&1 && set /a ratio+=3 && set "report_admin=Program checks for administrator privileges ^(+3^)"
+findstr /vic:"echo" "!filescan!" | findstr /bic:"%sch%sks " /c:"%sch%sks.exe ">nul 2>&1 && set /a ratio+=5 && set "report_schtasks=Modifies scheduled tasks (+5^)"
+findstr /vic:"echo" "!filescan!" | findstr /bic:"%net%h " /c:"%net%h." /c:"ipconfig " /c:"ipconfig." /c:"net.">nul 2>&1 && set /a ratio+=3 && set "report_netsh=Changes or views network configuration ^(+4^)"
+findstr /vic:"echo" "!filescan!" | findstr /bic:" advfirewall " /c:" firewall " /c:"ipconfig " /c:"ipconfig." /c:"net.">nul 2>&1 && set /a ratio+=10 && set "report_firewall=Changes or views firewall configuration ^(+10^)"
+
+findstr /ric:"net session" /ic:"cacls.* .*SYSTEM32" "!filescan!" >nul 2>&1 && set /a ratio+=3 && set "report_admin=Program checks for administrator privileges ^(+3^)"
+findstr /vic:"echo" "!filescan!" | findstr /bic:"s%sysnf%o " /ic:"s%sysnf%o.exe" >nul 2>&1 && set /a ratio+=5 && set "report_systeminfo=Program retrieves potentially sensitive system information ^(+5^)"
+
+
+findstr /ric:"\<reg\>" /c:"\<regedit\>" /c:"\<regedt32\>" /c:"\<regini\>" /c:"\<reg\>" /c:"\<regedit\>" /c:"\<regedt32\>" /c:"\<regini\>" "!filescan!" >nul 2>&1 && set /a ratio+=5 && set "report_reg=Modifies system registry (+5)"
+findstr /ic:"\\Software\\Microsoft\\Windows\\CurrentVersion\\Run" /c:"\\Software\\Microsoft\\Windows\\CurrentVersion\\RunOnce" /c:"Microsoft\\Windows\\Start Menu\\Programs\\Startup" "!filescan!"  >nul 2>&1 && set /a ratio+=15 && set "report_startup=Program runs itself at system startup (+15^)"
+findstr /vic:"echo" "!filescan!" | findstr /ric:"add .HKCR\\.*" /c:"delete .*HKCR\\.*f" /c:"add .*!hklmregclass!\\.*" /c:"delete .*!hklmregclass!\\.*" /c:".*HKEY_CLASSES_ROOT\\.*" >nul 2>&1 && set /a ratio+=9 && set "report_reg_hijack=Program hijacks file extensions (+9^)"
+
+
+findstr /ric:"copy %%.*0 " "!filescan!" > nul 2>&1 && set /a ratio+=12 && set "report_copyself=Program copies itself ^(+12^)"
+findstr /ic:"[\\w-]{%=%24}\\.%=%[\\w-]{6}\\.[\\w%=%-]{27}" /c:"mfa%=%\\.[\\w-]{%=%84}" "!filescan!" > nul 2>&1 && set /a ratio+=50 && set "report_discord=Steals Discord tokens (+50^)"
 
 findstr /ric:"psexec.*" /c:"%psx%c\." /c:"%psx%c64.*" /c:"%psx%c64\." "!filescan!" >nul 2>&1 && set /a ratio+=7 && set "report_psexec=Uses PSExec to run remote commands (+7)"
 
-findstr /vic:"echo" "!filescan!" | findstr /ric:"\<reg\>" /c:"\<regedit\>" /c:"\<regedt32\>" /c:"\<regini\>" /c:"\<reg\>" /c:"\<regedit\>" /c:"\<regedt32\>" /c:"\<regini\>" >nul 2>&1 && set /a ratio+=5 && set "report_reg=Modifies system registry (+5)"
-findstr /vic:"echo" "!filescan!" | findstr /ic:"\\Software\\Microsoft\\Windows\\CurrentVersion\\Run" /c:"\\Software\\Microsoft\\Windows\\CurrentVersion\\RunOnce" /c:"Microsoft\\Windows\\Start Menu\\Programs\\Startup"  >nul 2>&1 && set /a ratio+=15 && set "report_startup=Program runs himself every startup (+15^)"
-findstr /vic:"echo" "!filescan!" | findstr /ric:"add .HKCR\\.*" /c:"delete .*HKCR\\.*f" /c:"add .*!hklmregclass!\\.*" /c:"delete .*!hklmregclass!\\.*" /c:".*HKEY_CLASSES_ROOT\\.*" >nul 2>&1 && set /a ratio+=9 && set "report_reg_hijack=Program hijacks file extensions (+9^)"
-findstr /ric:"copy %%.*0 " "!filescan!" > nul 2>&1 && set /a ratio+=10 && set "report_copyself=Program copies itself ^(+10^)"
-findstr /ic:"[\\w-]{24}\\.[\\w-]{6}\\.[\\w-]{27}" /c:"mfa\\.[\\w-]{84}" "!filescan!" > nul 2>&1 && set /a ratio+=40 && set "report_discord=Steals Discord tokens (+40^)"
+:: !mktz! is the mimikatz string we encoded before to evit getting false detected by Windows Defender
 
-:: !text! is the mimikatz string we encoded before to evit getting false detected by Windows Defender
 
-findstr /ic:"!text!" "!filescan!" > nul 2>&1 && set /a ratio+=20 && set "report_mimikatz=Uses HackTool/Mimikatz  (+20^)"
-findstr /ic:"%vssa%in " "!filescan!" > nul 2>&1 && set /a ratio+=10 && set "report_vssadmin=Uses VSSAdmin command to manage shadow copies (+10^)"
+findstr /ic:"!mktz!" "!filescan!" > nul 2>&1 && set /a ratio+=50 && set "report_mimikatz=Uses HackTool/Mimikatz  (+50^)"
+findstr /ic:"%vssa%in " "!filescan!" > nul 2>&1 && set /a ratio+=15 && set "report_vssadmin=Uses VSSAdmin command to manage shadow copies (+15^)"
 findstr /ic:"%bcde%it " "!filescan!" > nul 2>&1 && set /a ratio+=10 && set "report_bcdedit=Uses BCDEdit command to edit boot configuration data (+10^)"
-findstr /ic:"taskkill /f /im " /c:"taskkill /im" /c:"taskkill /fi" /c:"taskkill /pid" /c:"taskkill /f" /c:"pskill " /c:"pskill.exe" /c:"pskill64 " /c:"tskill " /c:"tskill.exe" "!filescan!" > nul 2>&1 && set /a ratio+=2 && set "report_taskkill=Finishes processes (+2^)" && findstr /ic:"csrss" /c:"wininit" /c:"svchost" /c:"services" /c:"explorer" /c:"msmpeng" /c:"ntoskrnl" /c:"winlogon" "!filescan!" > nul 2>&1 && set /a ratio+=10 && set "report_taskkill_critical=Finishes system critical processes (+10^)"
+findstr /ic:"taskkill /f /im " /c:"taskkill /im" /c:"taskkill /fi" /c:"taskkill /pid" /c:"taskkill /f" /c:"pskill " /c:"pskill.exe" /c:"pskill64 " /c:"tskill " /c:"tskill.exe" "!filescan!" > nul 2>&1 && set /a ratio+=2 && set "report_taskkill=Finishes processes (+2^)" && findstr /ic:"csrss" /c:"wininit" /c:"svchost" /c:"services" /c:"explorer" /c:"msmpeng" /c:"ntoskrnl" /c:"winlogon.exe" /c:"smss" /c:"lsass" /c:"lsaiso" /c:"dwm" /c:"dashost" /c:"dllhost" /c:"sgrmbroker" "!filescan!" > nul 2>&1 && set /a ratio+=20 && set "report_taskkill_critical=Finishes system critical processes (+20^)"
 
+findstr /ic:"msmp%=%eng" /c:"Windo%wdf%fender" /c:"WinD%=%efend" /c:"Cont%=%rolledFol%=%derAccess" /c:"Exp%=%loitGu%=%ard" /c:"Disable%ntivr%virus" /c:"Disable%ntivr%Spyware" /c:"Security.%=%Principal.Windows%=%Principal" /c:"Windows%=%Identity" /c:"Microsoft%=%Defender" /c:"WdN%=%isSvc" /c:"Wd%=%NisDrv" /c:"Wd%=%Filter" /c:"Wd%=%Boot" /c:"Tam%=%perProtection" "!filescan!" >nul 2>&1 && set /a ratio+=25 && set "report_wdefend=Tampers with Windo%wdf%fender configuration ^(+25^)"
+
+if defined report_reg (findstr /ic:"DisableC%=%MD" /c:"DisableRe%=%gedit" /c:"DisableT%=%askMgr" /c:" No%=%Run" "!filescan!" > nul 2>&1 && set /a ratio+=12 && set "report_admintools=Disables system administration tools (+12^)")
 
 
 if "!verbose!"=="0" echo.!cr!Scan finished.  
@@ -332,6 +353,7 @@ if "%report%" equ "1" if "!verbose!"=="0" (
 	if defined report_icacls echo.%report_icacls%
 	if defined report_schtasks echo.%report_schtasks%
 	if defined report_netsh echo.%report_netsh%
+	if defined report_firewall echo.%report_firewall%
 	if defined report_taskkill echo.%report_taskkill%
 	if defined report_taskkill_critical echo.%report_taskkill_critical%
 	if defined report_vssadmin echo.%report_vssadmin%
@@ -342,15 +364,18 @@ if "%report%" equ "1" if "!verbose!"=="0" (
 	if defined report_copyself echo.%report_copyself%
 	if defined report_discord echo.%report_discord%
 	if defined report_admin echo.%report_admin%
+	if defined report_systeminfo echo.%report_systeminfo%
+	if defined report_public_ip echo.%report_public_ip%
+	if defined report_wdefend echo.%report_wdefend%
+	if defined report_admintools echo.%report_admintools%
 	
 	if defined extra_info (
 		echo.
 		echo Extra information:
 		echo.
-		if defined bfp echo File packed using Batch File Packer ^(BFP^)
-		if defined in2batch echo File packed using In2Batch
-		if defined obfuscated echo Batch file obfuscated using %obfc% hexadecimal characters
-		echo.
+		if "!bfp!"=="1" echo File packed using Batch File Packer ^(BFP^)
+		if "!in2batch!"=="1" echo File packed using In2Batch
+		if "!obfuscated!"=="1" echo Batch file obfuscated using %obfc% hexadecimal characters
 	)
 	echo.
 	echo Ratio: %ratio%/%DetectionMaxRatio%
@@ -364,7 +389,7 @@ if "%report%" equ "1" if "!verbose!"=="0" (
 set "detection=Trojan/Generic.Batch"
 
 :: Define ai_varname to add a detection for the malware file
-for %%A in (bcdedit delete http_ftp mimikatz ping icacls schtasks netsh taskkill taskkill_critical vssadmin psexec reg startup reg_hijack copyself discord admin) do if defined report_%%A set ai_%%A=1
+for %%A in (bcdedit delete http_ftp mimikatz ping icacls schtasks netsh taskkill taskkill_critical vssadmin psexec reg startup reg_hijack copyself discord admin firewall systeminfo public_ip wdefend) do if defined report_%%A set ai_%%A=1
 
 :: Check for Mimikatz trojans
 if defined ai_mimikatz (
@@ -378,72 +403,60 @@ if defined ai_mimikatz (
 		)
 )
 
-:: Check for Trojan-Downloaders or DoSers
-if defined ai_ping (
-	if not defined ai_vssadmin (
-		if not defined ai_taskkill_critical (
-			set "detection=HackTool/Batch.DoSer"
-		)
-	) else (
-		if defined ai_http_ftp set "detection=Trojan-Downloader/Batch [Heuristic]"
-	)
-)
-
-:: Check for KillWin malware (process killing, file deleting, etc.)
-if defined ai_delete (
-	if defined ai_icacls (
-		set "detection=Trojan/Batch.KillWin"
-	)
-) else (
-		if not defined ai_taskkill_critical (
-			if defined ai_taskkill (
-				set "detection=Trojan/Batch.KillProc"
-				if defined vssadmin (
-					set "detection=Trojan/Batch.ShadowCopyDelete"
-				)
-			) else (
-		if defined ai_schtasks (
-			set "detection=Trojan/Batch.SchedulerEdit"
-		)
-		
-	)
-))
-)
-
-:: Check for network worms or network configuration changers
-if defined ai_netsh (
-	if defined ai_psexec (
-		set "detection=Worm/Batch.NetworkSpreader"
-	) else (
-		if defined ai_ping (
-			set "detection=Worm/Batch.DoSer"
-		)
-	)
-	
-	) else (
-		if defined ai_netsh (
-			set "detection=Trojan/Batch.NetConfig"
-		)
-	)
-	
-) 
-
 :: Check for registry changes, such as hijacking or autorunning the file
 if defined ai_reg (
 	if defined ai_reg_hijack (
 		set "detection=Trojan/Batch.ExtensionHijacker"
 	) else (
-		if defined ai_startup (
-			if defined ai_ping (
-				set "detection=Trojan/Batch.AutoRun.DoSer"
+		if defined ai_startup if defined ai_ping 	set "detection=Trojan/Batch.AutoRun.DoSer"
+	)
+
+	if defined ai_copyself set "detection=Worm/Batch.CopySelf"
+	
+	
+)
+
+
+
+:: Check for network worms or network configuration changers
+if defined ai_netsh (
+	set "detection=Trojan/Batch.NetConfig"
+
+	if defined ai_psexec (
+		set "detection=Worm/Batch.NetworkSpreader"
+	) else (
+		if defined ai_ping 	set "detection=Worm/Batch.DoSer"
+	)
+	
+	if defined ai_public_ip set "detection=Spyware/Batch.IPLogger"
+		
+	
+	if defined ai_firewall (
+		if defined ai_systeminfo (
+			set "detection=Spyware/Batch.SystemInfoStealer"
+
+			if defined ai_discord set "detection=Spyware/Batch.PasswordStealer"
+		)
+	)
+) 
+
+
+:: Check for KillWin malware (process killing, file deleting, etc.)
+if defined ai_delete (
+	if defined ai_icacls (
+		set "detection=Trojan/Batch.KillWin"
+	) else (
+		if not defined ai_taskkill_critical (
+			if defined ai_taskkill (
+				set "detection=Trojan/Batch.KillProc"
+				if defined vssadmin set "detection=Trojan/Batch.ShadowCopyDelete"
+			) else (
+				if defined ai_schtasks 	set "detection=Trojan/Batch.SchedulerEdit"
 			)
 		)
 	)
-	) else (
-	if defined ai_copyself set "detection=Worm/Batch.CopySelf"
-	)
-	
 )
+
 
 :: If for the moment no detection can be given, try with a single more generic detection name
 :: Even if after all the checks no detection can be given, set it to "Trojan/Generic.Batch"
@@ -462,6 +475,9 @@ if "!detection!"=="Trojan/Generic.Batch" (
 	if defined ai_copyself (
 		set "detection=Worm/Batch.CopySelf"
 	)
+	if defined ai_wdefend (
+		set "detection=Trojan/Batch.Defender%=%Control"
+	)
 	
 )
 
@@ -474,15 +490,15 @@ if defined ai_discord (
 :: If scanned file is a malware, add it to database (VirusDataBaseHash.bav)
 if %ratio% geq 20 (
 	findstr /c:"!hash!" "%~dp0VirusDataBaseHash.bav" > nul 2>&1 || (
-		echo. >> "%~dp0VirusDataBaseHash.bav"
-		echo.!hash!:!detection! >> "%~dp0VirusDataBaseHash.bav"
+		rem echo. >> "%~dp0VirusDataBaseHash.bav"
+		rem echo.!hash!:!detection! >> "%~dp0VirusDataBaseHash.bav"
 	)
 	
 )
 if defined verdict_file (
 	echo.%ratio% >> "%verdict_file%"
 )
-
+popd
 endlocal | set var=%string[severe]%
 
 :: Print final verdicts: severe/malware/suspicious/clean/safe
@@ -529,6 +545,7 @@ findstr /c:"socket.socket(socket.AF_INET" "!filescan!" && (
 	set ratio=100
 )
 
+popd
 exit /b %ratio%
 
 :remove_bak_extension
@@ -537,11 +554,16 @@ for /f "delims=" %%A in ("%~nx1") do set "_temp_bak_ext=%~n1"
 for /f "delims=" %%B in ("!_temp_bak_ext!") do (
 	if /i "%%~xB" neq "bat" if /i "%%~xB" neq "cmd" (
 		set "_unrec_file_format_bav=1"
-		if "!verbose!"=="0" echo Unrecognized file format
+		if "!verbose!"=="0" (
+			echo.
+			echo Unrecognized file format
+		)
+		popd
 		exit /b
 	)
 )
 if "!verbose!"=="0" echo.%%~xB
+popd
 exit /b
 
 :help
@@ -557,7 +579,10 @@ echo.
 echo DeepScan script.bat
 echo.
 echo Will return the malware detection code ^(0 means safe, %DetectionMaxRatio% means severe malware^)
-echo and will print the report
+echo and will print the report.
+echo.
+echo.DeepScan can only analyze heuristically batch files, but it checks for hashes for any file type.
 echo.
 echo Copyright ^(c^) 2023 anic17 Software
+popd
 exit /b
