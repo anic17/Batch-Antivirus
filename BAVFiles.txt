@@ -1,1 +1,1 @@
-BAV.bat BAVAutorun.bat BAVConfig.bat BAVDetail.bat BAVStatus.bat BAVUpdate.bat DeepScan.bat InstallIntercept.bat Quarantine.bat RealTimeProtection.bat ScanIntercept.bat USBCleaner.bat USBScan.bat VirusDataBaseHash.bav VirusDataBaseIP.bav gethex.exe sha256.exe waitdirchange.exe
+BAV.bat BAVAutorun.bat BAVConfig.bat BAVDetail.bat BAVStatus.bat BAVUpdate.bat BAVWebsiteBlocker.bat DeepScan.bat BAVIntercept.bat Quarantine.bat RealTimeProtection.bat USBCleaner.bat USBScan.bat VirusDataBaseHash.bav VirusDataBaseIP.bav gethex.exe sha256.exe waitdirchange.exe
