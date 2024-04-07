@@ -8,62 +8,69 @@ For a more in-depth explanation, go to [Batch Antivirus webpage](https://anic17.
 
 # Features of Batch Antivirus
 
- - Drive scanner
- - Auto-updater (both antivirus and databases)
- - Deep Scanning (for batch files)
- - 192k SHA256 hash database
- - 313k IP database
- - USB Scanner for malware
- - USB shortcut malware remover
+ - World's most precise automated batch file behavior analyzer.
+   - Profoundly scans batch files
+   - Includes 23 unique behavior detection patterns
+   - Detects whether obfuscation techniques are used
+   - Bypasses commonly used anti-antivirus techniques
+   - Provides an accurate naming of new detections
+   - Returns a malicious behavior score over 100
+   - Online VirusTotal analysis
+- Real-time protection
+   - Real-time file protection
+   - Real-time web protection
+   - Real-time process analyzer
+   - Kill protection for real-time protection
+   - Background real-time protection
+   - PC Monitor, which checks for disk space & CPU temperature
+ - Full drive & USB scanner
+   - USB shortcut malware remover
+ - Auto updater (both antivirus and databases)
+ - Custom database
+   - 193k SHA256 hash database with accurate detection names
+   - 313k IP database
  - Autorun configuration of the antivirus
- - Real-time file protection
- - Real-time web protection
- - PC Monitor, which checks for disk space & CPU temperature
- - Kill protection for real-time protection
- - Background real-time, starting before any other startup program (even `explorer.exe`)
- - Quarantine (files are encoded in base64 and locked)
- - Quarantine viewer
- - File opening interception
- - VirusTotal analysis (On DeepScan)
+    - Boot-time real-time protection that initiates before any other startup program (even `explorer.exe`)
+ - Safe, isolated quarantine
+   - Includes a quarantine viewer with information about the files
+   - Files are base-64 encoded and ACL-locked, preventing even administrator-level processes from interacting with them
+ - An experimental file association interception
 
 # Frequent Asked Questions
 
-## Is Batch Antivirus good enough to use as a regular antivirus?
+## Is Batch Antivirus suitable for use as a primary antivirus solution?
 
-Sadly, the answer is no. Batch Antivirus contains a small database (192k hashes). Although it may seem like it's a lot, the fact that new malware is appearing makes it very difficult to be up-to-date with the latest definitions.
-Batch Antivirus can do a great job monitoring files, but if you want a safe system you need to use another antivirus solution. Think of Batch Antivirus as an extra protection layer.
+Regrettably, the answer is no. Batch Antivirus relies on a relatively small database (193k hashes). Despite its apparent size, the continuous emergence of new malware poses a significant challenge in maintaining up-to-date definitions. The more severe malware detections are kept up to date.
+Batch Antivirus provides effective file monitoring and common malware detection capabilities, however, the combined use of Batch Antivirus and an alternative antivirus solution is strongly recommended. Think of Batch Antivirus as an extra protection layer.
 
 ## Does Batch Antivirus need to be installed?
 
-No, Batch Antivirus can be used portably. Real-time protection relies on folder changing and not on kernel drivers. Although it's not needed, it is recommended to run real-time protection (`RealTimeProtection.bat`) and the drive scanner (`BAV.bat`) with administrator privileges to scan system files.  
-
+No, Batch Antivirus can be used portably. Real-time protection relies on folder change monitoring and not on kernel drivers. Although it is not needed, running real-time protection (`RealTimeProtection.bat`) and the drive scanner (`BAV.bat`) with administrator privileges to scan system files is recommended.  
 If you're willing to have better security, consider adding Batch Antivirus as an autorun with [`BAVAutorun.bat`](https://github.com/anic17/Batch-Antivirus/blob/master/BAVAutorun.bat) and selection option 3 (shell). Setting Batch Antivirus as your shell will run the protection before any other startup program.
 
 ## Why is scanning so slow?
 
-Drive scanning is slow because of the slow nature of batch of launching new processes. Nonetheless, it has been optimized when scanning folders in real-time protection.
+The speed of drive scanning is constrained by the inherent limitations of batch processing, particularly in launching new processes. Nonetheless, significant optimizations have been implemented to speed up folder scanning during real-time protection.
 
 ## Does web protection register websites I visit?
 
-No, Batch Antivirus doesn't collect **any** data.  
-Privacy is always important. Batch Antivirus uses the command `netstat -no` to get the active TCP connections to the PC. Then they're searched on `VirusDataBaseHash.bav` database to check if it's a malicious website. Nothing else.
+No, Batch Antivirus doesn't collect **any** data because user's privacy is a priority. To get the active TCP connections, Batch Antivirus uses the command `netstat -no` to retrieve the data. Afterwards, the IPs found are looked up on `VirusDataBaseHash.bav` database to check if a malicious or blocked website was visited.
 
 ## I accidentally found some malware, where can I send you the SHA256 hash?
 
 Contribute by creating a [pull request](https://github.com/anic17/Batch-Antivirus/pulls). Alternatively, you can send malicious hashes at batch.antivirus@gmail.com or [contact me](#contact)
 
+## Why does the heuristical analyzer sometimes detects legitimate programs?
 
-## Why does the heuristical analyzer detect legitimate programs?
-
-The Deep scanner module checks for patterns usually found in malware. Even though it has been adjusted to minimize false positives, some programs may give false positives as their behavior may be similar to malicious programs.
+The Deep scanner module checks for patterns usually found in malware. Even though it has been adjusted to minimize false positives, it is impossible to mitigate all false positives. Programs that change registry settings or tweaker scripts are susceptible to false positives due to their potentially dangerous behavior.
 
 ## What do I need to do if I want to use a part of the antivirus?
 
-You can distribute programs that use Batch Antivirus, but please credit me and link this repository. It helps give more visibility to this project and it is highly appreciated.
+You are allowed to distribute programs that utilize Batch Antivirus; however, please ensure proper attribution by crediting me and providing a link to this repository and any other component used (such as the databases). Your support in promoting this project is greatly valued and contributes to its visibility. Thank you for your cooperation.
 
 ## Contact
 
-Feel free to contact me on Discord (ID 684471165884039243)  
+Feel free to contact me on Discord (ID 684471165884039243) or my server Program Dream.
 <a href="https://discord.gg/J628dBqQgb"><img src="https://img.shields.io/discord/728958932210679869?style=flat-square&logo=appveyor"></a>
 
 
