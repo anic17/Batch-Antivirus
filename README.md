@@ -23,6 +23,7 @@ For a more in-depth explanation, go to [Batch Antivirus webpage](https://anic17.
    - Kill protection for real-time protection
    - Background real-time protection
    - PC Monitor, which checks for disk space & CPU temperature
+   - Customizable website blocker
  - Full drive & USB scanner
    - USB shortcut malware remover
  - Auto updater (both antivirus and databases)
