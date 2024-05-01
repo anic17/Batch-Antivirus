@@ -1,75 +1,40 @@
 <head>
 
   <meta name="viewport" content="width=device-width">
-  <meta name="description" content="Batch Antivirus, a console text editor written in C">
-
+  <meta name="description" content="Batch Antivirus, a full full-fledged antivirus written in Batch by anic17">
+  <meta name="keywords" content="anic17, antivirus, batch-antivirus, batch antivirus">
+  <link rel="icon" href="/resources/favicon.ico" type="image/x-icon" />
   <title>Batch Antivirus</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link
-    href="https://fonts.googleapis.com/css2?family=Inconsolata:wght@400&family=Zen+Maru+Gothic:wght@400;500;700&&family=Raleway:wght@400;700&display=swap"
-    rel="stylesheet"
-  />
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
-
-  <link rel="stylesheet" href="/style.css">
+  <link rel="stylesheet" href="/style.css" />
+  
   <!-- Google Analytics -->
   <!-- Google tag (gtag.js) -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-XT5LM18KB9"></script>
+  <script
+    async
+    src="https://www.googletagmanager.com/gtag/js?id=G-XT5LM18KB9"
+  ></script>
   <script>
     window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
+    function gtag() {
+      dataLayer.push(arguments);
+    }
+    gtag("js", new Date());
 
-    gtag('config', 'G-XT5LM18KB9');
+    gtag("config", "G-XT5LM18KB9");
   </script>
 </head>
 
+
 <body>
   <nav>
-  <div class="navbar">
-        <div class="subnav">
-          <!-- Buttons are formatted in this weird way due to browsers adding spaces between the buttons !-->
-
-          <a tabindex="1" href="https://anic17.github.io"><button class="cursorpointer" title="Go to the homepage">
-              Home</button></a>
-              
-              <span tabindex="2" class="subnavmenu">
-                <button class="subnavhover">
-                  Projects <i class="fa fa-caret-down"></i>
-                </button>
-              
-
-              <div class="subnav-content">
-                <a tabindex="3" href="https://anic17.github.io/Newtrodit">
-                <button class="cursorpointer" title="Newtrodit, a console text editor">
-                Newtrodit</button></a><a tabindex="4" href="https://anic17.github.io/Batch-Antivirus">
-                <button class="cursorpointer" title="Batch Antivirus, an antivirus written in batch">
-                Batch Antivirus</button></a><a tabindex="5" href="https://anic17.github.io/SWH"><button class="cursorpointer" title="Scripting Windows Host, a scripting language for Windows">
-                SWH</button></a><a tabindex="6" href="https://anic17.github.io/batch-plugins"><button class="cursorpointer" title="Collection of batch plugins">
-                Batch plugins</button></a><a tabindex="7" href="https://anic17.github.io/DiskRead"><button class="cursorpointer" title="DiskRead, read raw chunks of a disk or a file">
-                DiskRead</button></a><a tabindex="8" href="https://anic17.github.io/complex"><button class="cursorpointer" title="Complex number library written in and for C">
-                Complex</button></a><a tabindex="9" href="https://anic17.github.io/homepage"><button class="cursorpointer" title="Simple, minimalist and intuitive browser homepage">
-              Homepage</button></a>
-              </div>
-          </span>
-            
-          </div>
-          <div class="subnav">
-          <a tabindex="10" href="https://anic17.github.io/about" class="linknav"><button class="cursorpointer" title="The about me page">
-              About me</button></a> 
-               <a tabindex="11" href="https://github.com/anic17" class="linknav"><button class="cursorpointer" title="My GitHub profile">
-              GitHub</button></a> 
-            </div>
-        </div>
+    <div id="navbar"></div>
   </nav>
-
   <!-- Begins the website layout !-->
 
   <div id="layout">
     <div id="layout_notimportant">
-      <strong><h1 class="headers"><a class="headers" href="https://github.com/anic17/Batch-Antivirus">Batch Antivirus</a></h1></strong>
+      <h1 class="headers"><a class="increase" href="https://github.com/anic17/Batch-Antivirus">Batch Antivirus</a></h1>
       <br>
       <hr id="titlehr">
       <br>
@@ -122,13 +87,41 @@
       <h3 id="sec_headers">Main features</h3>
       <br>
       <ul class="batch-antivirus_ul">
-        <li>Drive scanner</li>
-        <li>Deep Scanning (for batch files)</li>
-        <li>190k+ SHA256 hash database</li>
-        <li>313k+ IP database</li>
-        <li>Real-time file protection</li>
-        <li>Real-time web protection</li>
-        <li>Auto-updater (both antivirus and databases)</li>
+        <li>World's most precise automated batch file behavior analyzer.</li>
+      <ul>
+        <li class="secondlevel">Profoundly scans batch files</li>
+        <li class="secondlevel">Includes 23 unique behavior detection patterns</li>
+        <li class="secondlevel">Detects whether obfuscation techniques are used</li>
+        <li class="secondlevel">Bypasses commonly used anti-antivirus techniques</li>
+        <li class="secondlevel">Provides an accurate naming of new detections</li>
+        <li class="secondlevel">Returns a malicious behavior score over 100</li>
+
+      </ul>
+      <li> Real-time protection</li>
+        <ul>
+        <li class="secondlevel">Real-time file protection</li>
+        <li class="secondlevel">Real-time web protection</li>
+        <li class="secondlevel">Real-time process analyzer</li>
+        <li class="secondlevel">Kill protection for real-time protection</li>
+        <li class="secondlevel">Background real-time protection</li>
+        <li class="secondlevel">PC Monitor, which checks for disk space & CPU temperature</li>
+        </ul>
+      <li>Full drive & USB scanner</li>
+      <ul>
+        <li class="secondlevel">USB shortcut malware remover</li>
+      </ul>
+      <li>Auto updater (both antivirus and databases)</li>
+      <li>Custom database</li>
+      <ul>
+        <li class="secondlevel">193k SHA256 hash database with accurate detection names</li>
+        <li class="secondlevel">313k IP database</li>
+      </ul>
+      <ul>
+        <li class="secondlevel">Boot-time real-time protection that initiates before any other startup program (even <code>explorer.exe</code> and <code>userinit.exe</code>)</li>
+      </ul>
+      <li>Safe, isolated quarantine</li>
+     
+      
 
       </ul>
       <br>
@@ -143,11 +136,13 @@
         <li>PC Monitor, which checks for disk space & CPU temperature</li>
         <li>Kill protection for real-time protection</li>
         <li>Background real-time, starting before any other startup program (even before <code>userinit.exe</code> and <code>explorer.exe</code>)</li>
-        <li>Quarantine (files are base64-encoded and locked with permissions)</li>
-        <li>Quarantine viewer</li>
-        <li>File opening interception</li>
-        <li>VirusTotal analysis (On DeepScan)</li>
+        <li>Includes a quarantine viewer with information about the files</li>
+        <ul>
+          <li class="secondlevel">Files are base-64 encoded and ACL-locked, preventing even administrator-level processes from interacting with them</li>
+        </ul>
         <li>Detailed malware detection.</li>
+        <li>Online VirusTotal analysis</li>
+        <li>Experimental file association interception</li>
       </ul>
       <br>
       <div class="hr_cont">
@@ -163,10 +158,11 @@
         <ul class="batch-antivirus_ul">
           <li><code>BAV.bat</code> &#10142; Disk scanner</li>
           <li><code>BAVDetail.bat</code> &#10142; Detailed malware detection.</li>
+          <li><code>BAVIntercept.bat</code> &#10142; Batch Antivirus file interceptor.</li>
           <li><code>BAVStatus.bat</code> &#10142; Batch Antivirus installation checker.</li>
           <li><code>BAVUpdate.bat</code> &#10142; Batch Antivirus updater.</li>
+          <li><code>BAVWebsiteBlocker.bat</code> &#10142; Batch Antivirus website blocker.</li>
           <li><code>DeepScan.bat</code> &#10142; Batch Antivirus heuristic scanner (for batch files).</li>
-          <li><code>InstallIntercept.bat</code> &#10142; Batch Antivirus file interceptor.</li>
           <li><code>Quarantine.bat</code> &#10142; Batch Antivirus quarantine viewer.</li>
           <li><code>RealTimeProtection.bat</code> &#10142; Real-time protection (both file and web protection).</li>
           <li><code>USBCleaner.bat</code> &#10142; Batch Antivirus shortcut malware remover.</li>
@@ -203,7 +199,7 @@
       <h2 class="headers">Help and usage</h2>
       <br>
       <div class="description">
-        For each module listed in <a href="#modules">modules</a>, specify <code>--help</code> as the first command-line argument to get a detailed explanation about that module. If you still have questions, don't hesitate to contact me.
+        For each module listed in <a class="increase" href="#modules">modules</a>, specify <code>--help</code> as the first command-line argument to get a detailed explanation about that module. If you still have questions, don't hesitate to contact me.
 
       </div>
       <br>
@@ -261,18 +257,12 @@
       </details>
     </div>
     
+    <footer>
+      <span id="footer">
+        <!-- Empty placeholder for loading it dynamically-->
+      </span>
+      <span id="copyright"></span>
+    </footer>
   </div>
-  <br>
-  <br>
-  <footer>
-    <div class="contact">
-        <a class="icons" target="_blank" href="https://github.com/anic17"><svg height=20 width=21 xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"/></svg></a><a class="icons" target="_blank" href="mailto:SWH.Console@gmail.com"><svg height=20 width=29 version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 330.001 330.001" style="enable-background:new 0 0 330.001 330.001;" xml:space="preserve"><g id="XMLID_348_"><path id="XMLID_350_" d="M173.871,177.097c-2.641,1.936-5.756,2.903-8.87,2.903c-3.116,0-6.23-0.967-8.871-2.903L30,84.602 L0.001,62.603L0,275.001c0.001,8.284,6.716,15,15,15L315.001,290c8.285,0,15-6.716,15-14.999V62.602l-30.001,22L173.871,177.097z"/><polygon id="XMLID_351_" points="165.001,146.4 310.087,40.001 19.911,40"/></g></svg></a><a class="icons" target="_blank" href="https://twitter.com/anic171"><svg height=20 width=25 xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M459.37 151.716c.325 4.548.325 9.097.325 13.645 0 138.72-105.583 298.558-298.558 298.558-59.452 0-114.68-17.219-161.137-47.106 8.447.974 16.568 1.299 25.34 1.299 49.055 0 94.213-16.568 130.274-44.832-46.132-.975-84.792-31.188-98.112-72.772 6.498.974 12.995 1.624 19.818 1.624 9.421 0 18.843-1.3 27.614-3.573-48.081-9.747-84.143-51.98-84.143-102.985v-1.299c13.969 7.797 30.214 12.67 47.431 13.319-28.264-18.843-46.781-51.005-46.781-87.391 0-19.492 5.197-37.36 14.294-52.954 51.655 63.675 129.3 105.258 216.365 109.807-1.624-7.797-2.599-15.918-2.599-24.04 0-57.828 46.782-104.934 104.934-104.934 30.213 0 57.502 12.67 76.67 33.137 23.715-4.548 46.456-13.32 66.599-25.34-7.798 24.366-24.366 44.833-46.132 57.827 21.117-2.273 41.584-8.122 60.426-16.243-14.292 20.791-32.161 39.308-52.628 54.253z"/></svg></a><a class="icons" target="_blank" href="https://discord.gg/gfmaxgE"><svg width=20 height=20 xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!-- Font Awesome Free 5.15.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) --><path d="M297.216 243.2c0 15.616-11.52 28.416-26.112 28.416-14.336 0-26.112-12.8-26.112-28.416s11.52-28.416 26.112-28.416c14.592 0 26.112 12.8 26.112 28.416zm-119.552-28.416c-14.592 0-26.112 12.8-26.112 28.416s11.776 28.416 26.112 28.416c14.592 0 26.112-12.8 26.112-28.416.256-15.616-11.52-28.416-26.112-28.416zM448 52.736V512c-64.494-56.994-43.868-38.128-118.784-107.776l13.568 47.36H52.48C23.552 451.584 0 428.032 0 398.848V52.736C0 23.552 23.552 0 52.48 0h343.04C424.448 0 448 23.552 448 52.736zm-72.96 242.688c0-82.432-36.864-149.248-36.864-149.248-36.864-27.648-71.936-26.88-71.936-26.88l-3.584 4.096c43.52 13.312 63.744 32.512 63.744 32.512-60.811-33.329-132.244-33.335-191.232-7.424-9.472 4.352-15.104 7.424-15.104 7.424s21.248-20.224 67.328-33.536l-2.56-3.072s-35.072-.768-71.936 26.88c0 0-36.864 66.816-36.864 149.248 0 0 21.504 37.12 78.08 38.912 0 0 9.472-11.52 17.152-21.248-32.512-9.728-44.8-30.208-44.8-30.208 3.766 2.636 9.976 6.053 10.496 6.4 43.21 24.198 104.588 32.126 159.744 8.96 8.96-3.328 18.944-8.192 29.44-15.104 0 0-12.8 20.992-46.336 30.464 7.68 9.728 16.896 20.736 16.896 20.736 56.576-1.792 78.336-38.912 78.336-38.912z"/></svg></a>
-
-    </div>
-    <span class="copyright">
-      <strong>
-        Copyright &copy; 2022 <a id="hoverlink" href="https://github.com/anic17">anic17 Software</a>
-      </strong>
-    </span>
-  </footer>
+  <script src="/index.js"></script>
 </body>
