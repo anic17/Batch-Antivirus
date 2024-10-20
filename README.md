@@ -70,8 +70,8 @@ You are allowed to distribute programs that use Batch Antivirus; however, please
 
 ## Contact
 
-Feel free to contact me on Discord (@anic17) or my server <a href="https://discord.gg/J628dBqQgb">Program Dream</a>.  
-<a href="https://discord.gg/J628dBqQgb"><img src="https://img.shields.io/discord/728958932210679869?style=flat-square&logo=appveyor"></a>
+Feel free to contact me on Discord (@anic17) or my server <a href="https://discord.gg/gfmaxgE">Program Dream</a>.  
+<a href="https://discord.gg/gfmaxgE"><img src="https://img.shields.io/discord/728958932210679869?style=flat-square&logo=appveyor"></a>
 
 
 **Copyright &copy; 2024 anic17 Software**
