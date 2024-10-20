@@ -3,7 +3,7 @@
 set skip=0
 if "%~1"=="--skip" set skip=1
 for %%A in (
-	"%~dp0..\BAV.bat"
+	"%~dp0BAV.bat"
 	"%~dp0BAVAutorun.bat"
 	"%~dp0BAVConfig.bat"
 	"%~dp0BAVDetail.bat"
