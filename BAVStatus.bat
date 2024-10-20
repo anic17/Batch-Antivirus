@@ -7,7 +7,6 @@ for %%A in (
 	"%~dp0BAVAutorun.bat"
 	"%~dp0BAVConfig.bat"
 	"%~dp0BAVDetail.bat"
-	"%~dp0BAVDisk.bat"
 	"%~dp0BAVStatus.bat"
 	"%~dp0BAVUpdate.bat"
 	"%~dp0DeepScan.bat"
