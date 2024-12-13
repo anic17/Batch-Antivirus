@@ -1,0 +1,58 @@
+Batch Antivirus v4.0.0 Changelog
+
+ - NEW MODULE: Launcher
+    Added a launcher for Batch Antivirus to make Batch Antivirus usage easier
+	It features a simple menu which allows the user to launch individual modules interactively.
+
+ - NEW MODULE: Website blocker
+    Block custom websites and IPs while real-time protection web protection is active.
+
+ - NEW REAL-TIME MODULE: Process scanner
+    Real-time protection now actively scans all the running processes for malware.
+
+ - UPDATED MALWARE DATABASE: VirusDataBaseIP.bav
+    Thanks to an extensive malicious IP list from https://gitlab.com/malware-filter/urlhaus-filter,
+	more than 59k IPs have been added to the database.
+
+ - IMPROVED MODULE: Deep scanner
+    Deep scanner now searches for 26 different patterns including anti-VM, password theft and attribute changes
+    The detection has been fine tuned to reduce false positives while detecting malware more accurately.
+
+ - IMPROVED MODULE: Real-time protection
+	Strengthened kill protection with independent monitoring of the watchdog and primary process.
+	
+ - IMPROVED MODULE: Scan interception
+    Scan interception module has been merged into a single file and features the ability to completely revert the changes made by it
+    Special thanks to @BatchDebug on GitHub for adding these functionalities to this module!
+
+ - IMPROVED MODULE: Threat detail
+    The threat detail module has been expanded to display more accurate description of the detected malware present inside the database
+	Furthermore, the module can also give detailed information of the possible threats inside a file by passing its path.
+ 
+ - IMPROVED MODULE: Disk scanner
+    It now base64-encodes quarantined files for more safety and numerous bug fixes and improvements have been done.
+
+ - REWORKED MODULES: Merged 'USBScan.bat' and 'USBCleaner.bat' into a single, improved utility
+    They now scan every single drive and the autorun.inf malware detection has been improved.
+
+
+Technical changes:
+	
+ - Batch Antivirus now features an organized and optimized file structure
+ 
+ - Batch Antivirus is more configurable thanks to an improved settings system
+
+ - Real-time protection and disk scanner logs have been improved
+  
+ - Improved fork bomb detection by minimizing false positives while enhancing accuracy in identifying genuine threats
+
+ - Repeated entries in the database have been deleted
+
+ - Standarization of malware detection nomenclature
+
+ - Lots of minor bug fixes
+
+ - Grammar improvements
+
+ - Performance enhancements in deep scanner module
+

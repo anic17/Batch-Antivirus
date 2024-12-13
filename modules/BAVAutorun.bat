@@ -1,22 +1,22 @@
 ::BAV_:git@github.com:anic17/Batch-Antivirus.git
 @echo off
 setlocal EnableDelayedExpansion
-title Batch Antivirus autorun script
-echo.Batch Antivirus autorun script.
+title Batch Antivirus Autorun Script
+echo.Batch Antivirus Autorun Script.
 echo.
 pushd "%~dp0"
 call "%~dp0BAVStatus.bat" --skip || exit /b
-
-echo.Searching for autorun installations...
+set found=0
+echo Searching for autorun installations...
 for %%# in ("HKCU" "HKLM") do (
-	reg query "%%~#\Software\Microsoft\Windows\CurrentVersion\Run" /v "BAVAutoRun" > nul 2>&1 && echo. - Found %%~# hive
+	reg query "%%~#\Software\Microsoft\Windows\CurrentVersion\Run" /v "BAVAutoRun" > nul 2>&1 && (echo. - Found %%~# hive autorun & set found=1)
 )
 for /f "tokens=2* delims= " %%A in ('reg query "HKLM\Software\Microsoft\Windows NT\CurrentVersion\Winlogon" /v "Userinit"') do (
-		set "regshell=%%B"
-		set "regshell=!regshell:"=!"
-		if "!regshell!"=="%~dp0RealTimeProtection.bat --autorun-userinit" echo. - Found shell autorun
-	
+	set "regshell=%%B"
+	set "regshell=!regshell:"=!"
+	if "!regshell!" neq "!regshell:RealTimeProtection.bat --autorun-userinit=!" (echo. - Found shell autorun && set found=1)
 )
+if "!found!"=="0" echo No Batch Antivirus autoruns found
 echo.
 echo.This script will install Batch Antivirus real time protection when the computer starts.
 echo.It is highly recommended to run this script as an administrator.
@@ -42,7 +42,7 @@ if errorlevel 2 set regpath=HKLM
 if errorlevel 3 goto shellenable
 echo.Installing autorun...
 reg add "!regpath!\Software\Microsoft\Windows\CurrentVersion\Run" /v "BAVAutoRun" /t REG_SZ /d "\"%~dp0RealTimeProtection.bat\"" /f > nul 2>&1 || (
-	echo.Cannot write to the registry path. Try running this script with administrator privileges.
+	echo.Cannot write to the registry path. Try running this script as an administrator.
 	goto quit
 )
 echo.Checking autorun installation...
@@ -74,7 +74,7 @@ echo.Checking shell autorun...
 for /f "tokens=2* delims= " %%A in ('reg query "HKLM\Software\Microsoft\Windows NT\CurrentVersion\Winlogon" /v "Userinit"') do (
 		set "regshell=%%B"
 		set "regshell=!regshell:"=!"
-		if "!regshell!"=="%~dp0RealTimeProtection.bat --autorun-userinit" (
+		if "!regshell!" neq "!regshell:RealTimeProtection.bat --autorun-userinit=!" (
 			echo.Found shell autorun: Removing...
 			set /a found+=1
 			reg add "HKLM\Software\Microsoft\Windows NT\CurrentVersion\Winlogon" /v "Userinit" /t REG_SZ /d "%SystemRoot%\System32\userinit.exe," /f > nul 2>&1 && (
@@ -100,8 +100,18 @@ exit /b !errorlevel!
 
 :shellenable
 echo.Installing shell autorun...
+
+set "install_dir=%~dp0"
+echo.!install_dir! | findstr /b /i /c:"!userprofile!" > nul 2>&1 && (
+	echo.Could not install Batch Antivirus Autorun because it is currently installed on a user directory.
+	echo.
+	echo.Please move this installation to a non-user path ^(e.g. '!ProgramFiles!' or '!HomeDrive!\Batch Antivirus'^)
+	goto quit
+)
+
+
 reg add "HKLM\Software\Microsoft\Windows NT\CurrentVersion\Winlogon" /v "Userinit" /t REG_SZ /d "\"%~dp0RealTimeProtection.bat\" --autorun-userinit" /f > nul 2>&1 || (
-	echo.Cannot write to the registry path. Try running this script with administrator privileges.
+	echo.Cannot write to the registry path. Try running this script as an administrator.
 	goto quit
 )
 echo.Checking autorun shell installation...
