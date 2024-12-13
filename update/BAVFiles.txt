@@ -1,0 +1,1 @@
+modules\BAVAutorun.bat modules\BAVConfig.bat modules\BAVDetail.bat modules\BAVDisk.bat modules\BAVIntercept.bat modules\BAVStatus.bat modules\BAVUpdate.bat BAVWebsiteBlocker.bat modules\DeepScan.bat modules\Quarantine.bat modules\RealTimeProtection.bat modules\USBCleaner.bat modules\USBScan.bat BAV.bat
