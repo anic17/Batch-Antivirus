@@ -22,13 +22,13 @@ title Batch Antivirus Updater
 echo Checking for updates...
 set skipprompt=0
 if /i "%~1"=="--skip" set skipprompt=1
-set "files=BAVAutorun.bat BAVConfig.bat BAVDetail.bat BAVDisk.bat BAVInstall.bat BAVIntercept.bat BAVStatus.bat BAVUpdate.bat BAVUpdateScript.bat BAVWebsiteBlocker.bat DeepScan.bat Quarantine.bat RealTimeProtection.bat USBCleaner.bat USBScan.bat"
+set "files=modules\BAVAutorun.bat modules\BAVConfig.bat modules\BAVDetail.bat modules\BAVDisk.bat modules\BAVIntercept.bat modules\BAVStatus.bat modules\BAVUpdate.bat BAVWebsiteBlocker.bat modules\DeepScan.bat modules\Quarantine.bat modules\RealTimeProtection.bat modules\USBCleaner.bat modules\USBScan.bat BAV.bat"
 
 set "outdir=!TMP!\Batch-Antivirus"
 md "!outdir!" >nul 2>&1
 
 (curl -V > nul 2>&1 && set "hasCurl=1") || set "hasCurl=0"
-for %%A in ("database.ver" "BAVFiles.txt") do (
+for %%A in ("update\database.ver" "update\BAVFiles.txt") do (
 	if exist "!outdir!\%%~A" del "!outdir!\%%~A" /q > nul 2>&1
 	call :download "%%~A" "!outdir!\%%~A" --silent
 )
