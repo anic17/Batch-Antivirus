@@ -1,10 +1,10 @@
 ::BAV_:git@github.com:anic17/Batch-Antivirus.git
 @echo off
 setlocal EnableDelayedExpansion
-cd /d "%~dp0\modules" > nul 2>&1|| goto badinstall
+pushd "%~dp0\modules" > nul 2>&1|| goto badinstall
 set /p bav_version=<"VirusDataBaseHash.bav"
 set "bav_version=!bav_version::=!"
-set bav_version=!bav_version! rc-1
+set bav_version=!bav_version!
 title Batch Antivirus v!bav_version!
 set admin=0
 net session > nul 2>&1 && set admin=1
@@ -38,17 +38,21 @@ echo.
 echo.a^) Run this launcher as an administrator%already_admin%
 echo.c^) Credits
 echo.l^) Batch Antivirus v!bav_version! changelog 
+echo.q^) Quit
 echo.
 ) > con
 <nul set /p "=Choice: "
-choice /c:123456789acl /n
+choice /c:123456789aclq /n
 echo.
 
 if !errorlevel! geq 1 if !errorlevel! leq 9 goto :module_!errorlevel!
 if !errorlevel! equ 10 goto runas
 if !errorlevel! equ 11 goto credits
 if !errorlevel! equ 12 goto changelog
-
+if !errorlevel! equ 13 (
+	popd
+	exit /bv 0
+)
 goto menu
   
 
@@ -114,9 +118,8 @@ pause>nul
 goto menu
 
 :changelog
-set "clogpath=%~dp0modules\Data\changelog.txt"
-if not exist "!clogpath!" (
-	echo.Could not find the file '!clogpath!'
+if not exist "%~dp0modules\Data\changelog.txt" (
+	echo.Could not find the file '%~dp0modules\Data\changelog.txt'
 	echo.
 	echo.Press any key to return to the main menu...
 	pause>nul
