@@ -114,8 +114,9 @@ pause>nul
 goto menu
 
 :changelog
-if not exist "%~dp0modules\Data\changelog.txt" (
-	echo.Could not find the file '%~dp0modules\Data\changelog.txt'
+set "clogpath=%~dp0modules\Data\changelog.txt"
+if not exist "!clogpath!" (
+	echo.Could not find the file '!clogpath!'
 	echo.
 	echo.Press any key to return to the main menu...
 	pause>nul
