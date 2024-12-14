@@ -71,6 +71,7 @@ exit /B %errorlevel%
 
 :scan
 set "filescan=%~1"
+if not exist "!filescan!" goto :EOF
 set "fs_basename=%~nx1"
 call :settitle
 
@@ -178,7 +179,6 @@ exit /b
 :reg-scan
 :: Run keys
 echo.Scanning the autoruns...
-
 for %%A in (HKEY_LOCAL_MACHINE HKEY_CURRENT_USER) do (
 	rem Run and RunOnce
 	for /f "tokens=2* skip=2 delims= " %%A in ('reg query "%%A\Software\Microsoft\Windows\CurrentVersion\Run"') do call :scan "%%~B"

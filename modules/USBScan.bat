@@ -8,7 +8,7 @@ pushd "%~dp0"
 title Batch Antivirus USB Malware Removal Tool
 echo.Batch Antivirus USB Malware Removal Tool
 echo.
-echo.This Batch Antivirus utilityassists in removing malware from USB drives,
+echo.This Batch Antivirus utility assists in removing malware from USB drives,
 echo.both the widely spread USB shortcut malware and autorun malware.
 echo.
 echo.Batch Antivirus will now begin scanning for USB malware.
@@ -55,6 +55,7 @@ if "!tp:~1,2!"==":\" (
 ) else (
 	for /f "tokens=1* delims= " %%X in ("%~2") do set "filescan=%~d1\%%~X %%~Y"
 )
+	echo.
 
 call "%~dp0DeepScan.bat" "!filescan!" --verbose --novirustotal
 set det=%detection%
@@ -63,7 +64,6 @@ if !detectionratio! geq 20 (
 	for /f %%A in ('sha256 "!filescan!"') do set hash=%%A
 	set "hash=!hash:\=!"
 	set /a threats+=1
-	echo.
 	echo.Malware detected in drive %~d1 ^| !detection! ^(!filescan!^)
 	echo.Delete the malicious file? ^(y/n^)
 	choice /c:YN /n
