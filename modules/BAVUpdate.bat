@@ -1,7 +1,7 @@
 ::BAV_:git@github.com:anic17/Batch-Antivirus.git
 @echo off
 setlocal EnableDelayedExpansion
-
+pushd ..
 if /i "%~1"=="--help" (
 	echo.Batch Antivirus - Updater
 	echo.
@@ -22,7 +22,7 @@ title Batch Antivirus Updater
 echo Checking for updates...
 set skipprompt=0
 if /i "%~1"=="--skip" set skipprompt=1
-set "files=modules\BAVAutorun.bat modules\BAVConfig.bat modules\BAVDetail.bat modules\BAVDisk.bat modules\BAVIntercept.bat modules\BAVStatus.bat modules\BAVUpdate.bat BAVWebsiteBlocker.bat modules\DeepScan.bat modules\Quarantine.bat modules\RealTimeProtection.bat modules\USBCleaner.bat modules\USBScan.bat BAV.bat"
+set "files=modules\BAVAutorun.bat modules\BAVConfig.bat modules\BAVDetail.bat modules\BAVDisk.bat modules\BAVIntercept.bat modules\BAVStatus.bat modules\BAVUpdate.bat BAVWebsiteBlocker.bat modules\DeepScan.bat modules\Quarantine.bat modules\RealTimeProtection.bat modules\USBCleaner.bat modules\USBScan.bat modules\VirusDataBaseHash.bav modules\VirusDataBaseIP.bav BAV.bat"
 
 set "outdir=!TMP!\Batch-Antivirus"
 md "!outdir!" >nul 2>&1
@@ -112,6 +112,7 @@ if "!skipprompt!"=="0" (
 	echo.Press any key to quit...
 	pause>nul
 )
+popd
 endlocal
 exit /b %errorlevel%
 
@@ -134,7 +135,7 @@ for %%A in (!files! !uscript!) do (
 
 echo.
 echo.Applying update...
-md "%~dp0OldVersions\v!orig_ver_db!" > nul 2>&1
+md "%CD%\OldVersions\v!orig_ver_db!" > nul 2>&1
 set /a totalfiles=0,currfile=0
 for %%X in (!files!) do (
 	set /a totalfiles+=1
@@ -143,15 +144,15 @@ for %%X in (!files!) do (
 for /f %%# in ('copy /Z "%~dpf0" nul') do set "CR=%%#"
 set /a totalfiles-=1
 for %%A in (!files!) do (
-	if "%%A" neq "%~nx0" (
+	if "%%~nxA" neq "%~nx0" (
 		set /a currfile+=1
 		set /a percent=100*currfile/totalfiles
 
 		<nul set /p "=Replacing file [!currfile!/!totalfiles!] (!percent!%%)!CR!"
-		move /y "%~dp0%%A" "%~dp0OldVersions\v!orig_ver_db!" > nul 2>&1
-		for /f "delims=" %%X in ("%~dp0%%A") do mkdir "%~dpX"
+		move /y "%CD%\%%A" "%CD%\OldVersions\v!orig_ver_db!" > nul 2>&1
+		for /f "delims=" %%X in ("%CD%\%%A") do mkdir "%%~dpX" > nul 2>&1
 		
-		move /y "!outdir!\%%A" "%~dp0%%A" > nul 2>&1
+		move /y "!outdir!\%%A" "%CD%\%%A" > nul 2>&1
 	)
 )
 echo.
