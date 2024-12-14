@@ -141,7 +141,7 @@ if "!novirustotal!" neq "1" (
 			for /f "usebackq tokens=*" %%X in (`echo.!malicious!`) do set "malicious=%%X"
 			set /a total=malicious + undetected
 			if "!verbose!"=="0" (
-				if defined malicious (
+				if defined malicious if "!total!" neq "0" (
 					echo.
 					echo.File '!filescan!' ^(aka '!meaningful_name!'^) has !malicious!/!total! VirusTotal detections.
 				)

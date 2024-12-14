@@ -1,7 +1,9 @@
 ::BAV_:git@github.com:anic17/Batch-Antivirus.git
 @echo off
 setlocal EnableDelayedExpansion
-pushd ..
+pushd  "%~dp0"
+cd "modules" > nul 2>&1
+cd ..
 if /i "%~1"=="--help" (
 	echo.Batch Antivirus - Updater
 	echo.
@@ -38,11 +40,11 @@ if not exist "!outdir!\database.ver" (
 	echo Unable to retrieve latest version, are you connected to the internet?
 	goto quit
 )
-if not exist "%~dp0VirusDataBaseHash.bav" (
+if not exist "%CD%\modules\VirusDataBaseHash.bav" (
 	echo.No Batch Antivirus database found. Please redownload Batch Antivirus from the official GitHub.
 	goto quit
 )
-set /p ver_db=<"%~dp0VirusDataBaseHash.bav"
+set /p ver_db=<"%CD%\modules\VirusDataBaseHash.bav"
 set /p ver_online=<"!outdir!\update\database.ver"
 for /f "tokens=1* delims==" %%A in ('findstr /c:"updatemsg=" "!outdir!\database.ver"') do (
 	set "updatemsg=%%B"
