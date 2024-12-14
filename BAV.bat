@@ -1,7 +1,6 @@
 ::BAV_:git@github.com:anic17/Batch-Antivirus.git
 @echo off
 setlocal EnableDelayedExpansion
-
 cd /d "%~dp0\modules" > nul 2>&1|| goto badinstall
 set /p bav_version=<"VirusDataBaseHash.bav"
 set "bav_version=!bav_version::=!"
