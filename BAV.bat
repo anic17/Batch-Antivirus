@@ -133,7 +133,7 @@ goto menu
 
 :runas
 :runas
-powershell -ExecutionPolicy Bypass -Command Start-Process -FilePath """%~0""" -verb RunAs
+powershell -ExecutionPolicy Bypass -Command Start-Process -Filepath """%comspec%""" -Args """/c call `""""%~0`"""" """ -verb RunAs
 if "%errorlevel%" neq "0" (
 	echo.Failed to start Batch Antivirus Launcher as an administrator
 	echo.
