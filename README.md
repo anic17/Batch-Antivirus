@@ -8,39 +8,43 @@ For a more in-depth explanation, go to [Batch Antivirus webpage](https://anic17.
 
 # Features of Batch Antivirus
 
- - World's most precise automated batch file behavior analyzer.
+ - World's most precise automated batch file behavior analyzer
    - Profoundly scans batch files
-   - Includes 23 unique behavior detection patterns
+   - Includes 25 unique behavior detection patterns
    - Detects whether obfuscation techniques are used
-   - Bypasses commonly used anti-antivirus techniques
+   - Bypasses and flags commonly used anti-antivirus techniques
    - Provides an accurate naming of new detections
-   - Returns a malicious behavior score over 100
+   - Returns a malicious behavior score on a scale over 100
    - Online VirusTotal analysis
 - Real-time protection
    - Real-time file protection
    - Real-time web protection
    - Real-time process analyzer
-   - Kill protection for real-time protection
+   - Kill protection with double watchdog process
    - Background real-time protection
-   - PC Monitor, which checks for disk space & CPU temperature
- - Full drive & USB scanner
-   - USB shortcut malware remover
+   - PC Monitor, which checks for free disk space & CPU overheating
+ - Website blocker (requires real-time protection to be running)
+ - Full disk scanner
+   - Scans for essential computer registry keys for malware
+ - USB malware scanner & remover
+   - Scans and deletes shortcut malware
+   - Identifies and removes `autorun.inf` malware
  - Auto updater (both antivirus and databases)
- - Custom database
-   - 193k SHA256 hash database with accurate detection names
-   - 313k IP database
+ - Curated hash and IP database for the newest detections
+   - 185k SHA256 hash database with accurate detection names
+   - 373k IP database
  - Autorun configuration of the antivirus
     - Boot-time real-time protection that initiates before any other startup program (even `explorer.exe`)
- - Safe, isolated quarantine
-   - Includes a quarantine viewer with information about the files
+ - Safe and isolated quarantine
+   - Includes a quarantine viewer with information about the quarantined files
    - Files are base-64 encoded and ACL-locked, preventing even administrator-level processes from interacting with them
- - An experimental file association interception
+ - An experimental file association interception (use it at your own risk!)
 
-# Frequent Asked Questions
+# Frequently Asked Questions
 
 ## Is Batch Antivirus suitable for use as a primary antivirus solution?
 
-Regrettably, the answer is no. Batch Antivirus relies on a relatively small database (193k hashes). Despite its apparent size, the continuous emergence of new malware poses a significant challenge in maintaining up-to-date definitions. The more severe malware detections are kept up to date.
+Regrettably, the answer is no. Batch Antivirus relies on a relatively small database (185k hashes). Despite its apparent size, the continuous emergence of new malware poses a significant challenge in maintaining up-to-date definitions. The more severe malware detections are kept up to date.
 Batch Antivirus provides effective file monitoring and common malware detection capabilities, however, the combined use of Batch Antivirus and an alternative antivirus solution is strongly recommended. Think of Batch Antivirus as an extra protection layer.
 
 ## Does Batch Antivirus need to be installed?
@@ -54,17 +58,21 @@ The speed of drive scanning is constrained by the inherent limitations of batch 
 
 ## Does web protection register websites I visit?
 
-No, Batch Antivirus doesn't collect **any** data because user's privacy is a priority. To get the active TCP connections, Batch Antivirus uses the command `netstat -no` to retrieve the data. Afterwards, the IPs found are looked up on `VirusDataBaseHash.bav` database to check if a malicious or blocked website was visited.
+No, Batch Antivirus doesn't collect any data because user's privacy is a priority. To get the active TCP connections, Batch Antivirus uses the command `netstat -no` to retrieve the data. Afterwards, the IPs found are looked up on `VirusDataBaseIP.bav` database to check if a malicious or blocked website was visited.
 
-## I accidentally found some malware, where can I send you the SHA256 hash?
+## Does the website blocker modify my computer's hosts file?
+
+Thanks to the real-time protection module, the website blocker operates without modifying any system files, including the `hosts` file. Instead, it employs the same approach as the web protection feature to restrict access to blocked sites.
+
+## I found malicious files, where can I send you its SHA256 hash?
 
 Contribute by creating a [pull request](https://github.com/anic17/Batch-Antivirus/pulls). Alternatively, you can send malicious hashes at batch.antivirus@gmail.com or [contact me](#contact)
 
 ## Why does the heuristical analyzer sometimes detects legitimate programs?
 
-The Deep scanner module checks for patterns usually found in malware. Even though it has been adjusted to minimize false positives, it is impossible to mitigate all false positives. Programs that change registry settings or tweaker scripts are susceptible to false positives due to their potentially dangerous behavior.
+The Deep scanner module checks for patterns usually found in malware. Even though it has been adjusted to minimize false positives, it is impossible to mitigate all false positives. Programs that change registry settings or tweaker scripts are susceptible to false positives due to their potentially dangerous behavior and similarity to malicious scripts.
 
-## What do I need to do if I want to use a part of the antivirus?
+## What do I need to do to use a part of the antivirus?
 
 You are allowed to distribute programs that use Batch Antivirus; however, please ensure proper attribution by crediting me and providing a link to this repository and any other component used (such as the databases). Your support in promoting this project is greatly valued and contributes to its visibility. Thank you for your cooperation.
 
