@@ -62,7 +62,7 @@ set display_overheat=1
 set display_lowdisk=1
 
 :: Check for updates at every start (not recommended to disable)
-set check_updates=0
+set check_updates=1
 
 :: ===== Batch Antivirus settings end here =====
 

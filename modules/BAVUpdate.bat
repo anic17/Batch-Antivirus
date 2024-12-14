@@ -33,7 +33,7 @@ for %%A in ("update\database.ver" "update\BAVFiles.txt") do (
 	call :download "%%~A" "!outdir!\%%~A" --silent
 )
 
-if exist "!outdir!\BAVFiles.txt" set /p files=<"!outdir!\BAVFiles.txt"
+if exist "!outdir!\BAVFiles.txt" set /p files=<"!outdir!\update\BAVFiles.txt"
 if not exist "!outdir!\database.ver" (
 	echo Unable to retrieve latest version, are you connected to the internet?
 	goto quit
@@ -43,7 +43,7 @@ if not exist "%~dp0VirusDataBaseHash.bav" (
 	goto quit
 )
 set /p ver_db=<"%~dp0VirusDataBaseHash.bav"
-set /p ver_online=<"!outdir!\database.ver"
+set /p ver_online=<"!outdir!\update\database.ver"
 for /f "tokens=1* delims==" %%A in ('findstr /c:"updatemsg=" "!outdir!\database.ver"') do (
 	set "updatemsg=%%B"
 	echo.
@@ -56,7 +56,7 @@ set orig_ver_online=!ver_online!
 set "ver_online=!ver_online:.=!"
 set "ver_db=!ver_db:.=!"
 echo.
-set /a ver_diff=(!ver_online! - !ver_db!)/100
+set /a ver_diff=(ver_online - ver_db)/100
 set /a major_bld=!ver_db!/100
 if !ver_diff! gtr 0 (
 	set release_ver=https://github.com/anic17/Batch-Antivirus/releases/tag/v!major_bld!.0.0
@@ -90,14 +90,16 @@ goto quit
 
 :download <file> <output>
 
+set "download_url=%~1"
+set "download_url=!download_url:\=/!"
 if "!hasCurl!"=="1" (
-	
-	curl "https://raw.githubusercontent.com/anic17/Batch-Antivirus/master/%~1" --output "%~2" %~3
+	mkdir "%~dp2" > nul 2>&1
+	curl "https://raw.githubusercontent.com/anic17/Batch-Antivirus/master/!download_url!" --output "%~2" %~3
 	if !errorlevel! equ 6 (
 		echo.Failed to connect to the server. Make sure you are connected to the internet.
 	)
 ) else (
-	powershell -ExecutionPolicy Bypass -Command "$ProgressPreference = 'SilentlyContinue'; Invoke-WebRequest -Uri \"https://raw.githubusercontent.com/anic17/Batch-Antivirus/master/%~1\" -OutFile \"%~2\""
+	powershell -ExecutionPolicy Bypass -Command "$ProgressPreference = 'SilentlyContinue'; Invoke-WebRequest -Uri \"https://raw.githubusercontent.com/anic17/Batch-Antivirus/master/!download_url!\" -OutFile \"%~2\""
 	if not exist "%~2" (
 		echo.Failed to download the file. Make sure you are connected to the internet.
 	)
@@ -116,7 +118,9 @@ exit /b %errorlevel%
 :downloadnew
 echo.
 echo.Downloading version v!orig_ver_online!... Please do not close this window.
-for %%A in (!files!) do (
+set "uscript=update\BAVUpdateScript.bat"
+
+for %%A in (!files! !uscript!) do (
 	echo.Downloading '%%A'...
 	call :download %%A "!outdir!\%%A" --progress-bar
 	if exist "!outdir!\%%A" (
@@ -127,16 +131,6 @@ for %%A in (!files!) do (
 	)
 	
 )
-:: Update script is downloaded separately
-set "uscript=BAVUpdateScript.bat"
-echo.Downloading '!uscript!'...
-	call :download "update\!uscript!" "!outdir!\!uscript!" --progress-bar
-	if exist "!outdir!\!uscript!" (
-		echo.'!uscript!' downloaded successfully
-	) else (
-		echo.Failed to download '!uscript!': aborting update.
-		goto quit
-	)
 
 echo.
 echo.Applying update...
@@ -148,13 +142,15 @@ for %%X in (!files!) do (
 
 for /f %%# in ('copy /Z "%~dpf0" nul') do set "CR=%%#"
 set /a totalfiles-=1
-for %%A in (%files%) do (
+for %%A in (!files!) do (
 	if "%%A" neq "%~nx0" (
 		set /a currfile+=1
 		set /a percent=100*currfile/totalfiles
 
 		<nul set /p "=Replacing file [!currfile!/!totalfiles!] (!percent!%%)!CR!"
 		move /y "%~dp0%%A" "%~dp0OldVersions\v!orig_ver_db!" > nul 2>&1
+		for /f "delims=" %%X in ("%~dp0%%A") do mkdir "%~dpX"
+		
 		move /y "!outdir!\%%A" "%~dp0%%A" > nul 2>&1
 	)
 )
