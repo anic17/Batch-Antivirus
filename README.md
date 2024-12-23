@@ -6,9 +6,12 @@
 Official repository of Batch Antivirus. Batch Antivirus is a powerful antivirus suite written in batch with real-time protection and heuristical scanning. 
 For a more in-depth explanation, go to [Batch Antivirus webpage](https://anic17.github.io/Batch-Antivirus).
 
-## Motives and History
 
-# The Evolution of Batch Antivirus
+![image](https://github.com/user-attachments/assets/bdd5d853-78f7-42c5-ad2f-cc1f7a9c5a82)
+###### Launcher of Batch Antivirus v4.0.3
+
+
+## Motives and History
 
 Batch Antivirus began as a proof-of-concept project in June 2020 with a simple idea: to create a lightweight antivirus powered by a small malware hash database. The program initially calculated file hashes and checked them against this database for potential threats.
 
