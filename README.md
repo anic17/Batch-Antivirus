@@ -6,6 +6,18 @@
 Official repository of Batch Antivirus. Batch Antivirus is a powerful antivirus suite written in batch with real-time protection and heuristical scanning. 
 For a more in-depth explanation, go to [Batch Antivirus webpage](https://anic17.github.io/Batch-Antivirus).
 
+## Motives and History
+
+# The Evolution of Batch Antivirus
+
+Batch Antivirus began as a proof-of-concept project in June 2020 with a simple idea: to create a lightweight antivirus powered by a small malware hash database. The program initially calculated file hashes and checked them against this database for potential threats.
+
+Before adopting the name Batch Antivirus (BAV), the project was known as Scripting Windows Host AntiVirus (SWHAV), as it originated as a package for [Scripting Windows Host](https://github.com/anic17/SWH).
+
+Over time, Batch Antivirus grew far beyond its original scope. Advanced features like real-time protection and a heuristic batch scanner were integrated, demonstrating the potential of batch scripting for cybersecurity and for antimalware solutions.
+
+As of December 2024, Batch Antivirus has evolved into a robust antimalware suite. It now includes seven powerful modules and three additional utilities including an auto-updater, significantly enhancing its protection capabilities which makes Batch Antivirus stand out from a very long distance from other batch antimalware attempts.
+
 # Features of Batch Antivirus
 
  - World's most precise automated batch file behavior analyzer
