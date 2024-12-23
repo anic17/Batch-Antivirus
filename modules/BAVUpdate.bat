@@ -35,8 +35,8 @@ for %%A in ("update\database.ver" "update\BAVFiles.txt") do (
 	call :download "%%~A" "!outdir!\%%~A" --silent
 )
 
-if exist "!outdir!\BAVFiles.txt" set /p files=<"!outdir!\update\BAVFiles.txt"
-if not exist "!outdir!\database.ver" (
+if exist "!outdir!\update\BAVFiles.txt" set /p files=<"!outdir!\update\BAVFiles.txt"
+if not exist "!outdir!\update\database.ver" (
 	echo Unable to retrieve latest version, are you connected to the internet?
 	goto quit
 )
