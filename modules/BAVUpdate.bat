@@ -16,7 +16,7 @@ if /i "%~1"=="--help" (
 	echo.BAVUpdate
 	echo.Will update Batch Antivirus to the latest version
 	echo.
-	echo Copyright ^(c^) 2024 anic17 Software
+	echo Copyright ^(c^) 2025 anic17 Software
 	exit /b
 )
 if "!check_updates!"=="0" exit /b

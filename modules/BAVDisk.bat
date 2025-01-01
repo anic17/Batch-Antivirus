@@ -163,7 +163,7 @@ echo https://github.com/anic17/Batch-Antivirus
 echo.
 echo If you find some malware, contact batch.antivirus@gmail.com and send the malicious file hash.
 echo.
-echo Copyright (c) 2024 anic17 Software
+echo Copyright (c) 2025 anic17 Software
 endlocal
 exit /b 0
 

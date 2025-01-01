@@ -594,7 +594,7 @@ echo and will print the report without scanning it with VirusTotal.
 echo.
 echo.DeepScan can only analyze heuristically batch files, but it checks for hashes for any file type.
 echo.
-echo Copyright ^(c^) 2024 anic17 Software
+echo Copyright ^(c^) 2025 anic17 Software
 ) > "conout$"
 popd
 exit /b
