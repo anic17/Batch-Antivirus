@@ -114,6 +114,8 @@ echo.Official GitHub repository: https://github.com/anic17/Batch-Antivirus
 echo.
 echo.Special thanks to @BatchDebug for improving 'BAVIntercept.bat' module^^!
 echo.Thanks @moongazer07, @MrDiamond64 and @timlg07 for the contributions.
+echo.
+echo.Copyright (c) 2025 anic17 Software
 pause>nul
 goto menu
 
