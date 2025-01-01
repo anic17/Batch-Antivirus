@@ -83,8 +83,7 @@ Thanks to the Real-Time Protection module, the Website Blocker operates without 
 > Due to the database design, only SHA256 hashes are accepted. Any other hash type (MD5, SHA1, etc.) will be rejected.  
 > Similarly, the web database accepts only IPs and **not** URLs.
 
-Contribute to the database by creating a [pull request](https://github.com/anic17/Batch-Antivirus/pulls). Alternatively, you can send malicious hashes at batch.antivirus@gmail.com or [contact me](#contact). Expect a reply between 1 and 12 hours depending of the time of the day.
-
+Contribute to the database by creating a [pull request](https://github.com/anic17/Batch-Antivirus/pulls) or [contact me](#contact).
 ## Why does the heuristical analyzer sometimes detect legitimate programs?
 
 The Deep Scanner module checks for patterns usually found in malware. Even though it has been adjusted to minimize false positives, it is impossible to mitigate all false positives. Programs that change registry settings or tweaker scripts are susceptible to false positives due to their potentially dangerous behavior and similarity to malicious scripts.  
@@ -100,8 +99,12 @@ The feature that allows file blocking (not necessarily malware) but rather custo
 
 ## Contact
 
-Feel free to contact me on Discord (@anic17) or my server <a href="https://discord.gg/gfmaxgE">Program Dream</a>.  
-<a href="https://discord.gg/gfmaxgE"><img src="https://img.shields.io/discord/728958932210679869?style=flat-square&logo=appveyor"></a>
+Feel free to contact me on Discord (@anic17) and join the server <a href="https://discord.gg/gfmaxgE">Program Dream</a> where all development updates take place. Alternatively, you can also contact me via mail at batch.antivirus@gmail.com.  
+In all circumstances, expect a reply between 1 and 12 hours depending on the time of the day.  
+<a href="https://discord.gg/gfmaxgE"><img src="https://img.shields.io/discord/728958932210679869?style=flat-square&logo=appveyor"></a>  
+
+
+
 
 ## Contributing
 
