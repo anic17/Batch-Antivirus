@@ -1,5 +1,3 @@
-
-
 # Batch Antivirus
 <a href="https://github.com/anic17/Batch-Antivirus/stargazers">![batch-antivirus-stars](https://img.shields.io/github/stars/anic17/Batch-Antivirus?color=yellow&style=flat-square)</a> <a href="https://github.com/anic17/Batch-Antivirus/network/members">![batch-antivirus-forks](https://img.shields.io/github/forks/anic17/Batch-Antivirus?style=flat-square)</a> ![batch-antivirus-downloads](https://img.shields.io/github/downloads/anic17/Batch-Antivirus/total?color=green&style=flat-square) <a href="https://www.gnu.org/licenses/gpl-3.0">![batch-antivirus-license](https://img.shields.io/github/license/anic17/Batch-Antivirus?style=flat-square)</a> <a href="https://github.com/anic17/Batch-Antivirus/issues">![batch-antivirus-issues](https://img.shields.io/github/issues/anic17/Batch-Antivirus?style=flat-square)</a>
 
@@ -64,38 +62,58 @@ Batch Antivirus provides effective file monitoring and common malware detection 
 
 ## Does Batch Antivirus need to be installed?
 
-No, Batch Antivirus can be used portably. Real-time protection relies on folder change monitoring and not on kernel drivers. Although not needed, running real-time protection (`RealTimeProtection.bat`) and the drive scanner (`BAV.bat`) with administrator privileges to scan system files is recommended.  
+No, Batch Antivirus can be used portably. Real-Time Protection relies on folder change monitoring and not on kernel drivers. Although not needed, running real-time protection (`RealTimeProtection.bat`) and the drive scanner (`BAV.bat`) with administrator privileges to scan system files is recommended.  
 If you're willing to have better security, consider adding Batch Antivirus as an autorun with [`BAVAutorun.bat`](https://github.com/anic17/Batch-Antivirus/blob/master/BAVAutorun.bat) and selection option 3 (shell). Setting Batch Antivirus as your shell will run the protection before any other startup program.
 
 ## Why is scanning so slow?
 
-The speed of drive scanning is constrained by the inherent limitations of batch processing, particularly in launching new processes. Nonetheless, significant optimizations have been implemented to speed up folder scanning during real-time protection.
+The speed of disk scanning is constrained by the inherent limitations of batch processing, particularly in launching new processes. Nonetheless, significant optimizations have been implemented to speed up folder scanning during Real-Time Protection.
 
 ## Does web protection register websites I visit?
 
-No, Batch Antivirus doesn't collect any data because user's privacy is a priority. To get the active TCP connections, Batch Antivirus uses the command `netstat -no` to retrieve the data. Afterwards, the IPs found are looked up on `VirusDataBaseIP.bav` database to check if a malicious or blocked website was visited.
+No, Batch Antivirus does not collect any data because user's privacy is a priority. To get the active TCP connections, Batch Antivirus uses the command `netstat -no` to retrieve the data. Afterwards, the IPs found are looked up on `VirusDataBaseIP.bav` database to check if a malicious or blocked website was visited. The accessed IPs are not stored nor sent anywhere.
 
 ## Does the website blocker modify my computer's hosts file?
 
-Thanks to the real-time protection module, the website blocker operates without modifying any system files, including the `hosts` file. Instead, it employs the same approach as the web protection feature to restrict access to blocked sites.
+Thanks to the Real-Time Protection module, the website blocker operates without modifying any system files, including the `hosts` file. Instead, it employs the same approach as the web protection feature to restrict access to blocked sites.
 
 ## I found malicious files, where can I send you its SHA256 hash?
 
-Contribute by creating a [pull request](https://github.com/anic17/Batch-Antivirus/pulls). Alternatively, you can send malicious hashes at batch.antivirus@gmail.com or [contact me](#contact)
+Contribute to the database by creating a [pull request](https://github.com/anic17/Batch-Antivirus/pulls). Alternatively, you can send malicious hashes at batch.antivirus@gmail.com or [contact me](#contact). Depending on the time of the day, expect a reply between 1 and 12 hours.
 
 ## Why does the heuristical analyzer sometimes detects legitimate programs?
 
-The Deep scanner module checks for patterns usually found in malware. Even though it has been adjusted to minimize false positives, it is impossible to mitigate all false positives. Programs that change registry settings or tweaker scripts are susceptible to false positives due to their potentially dangerous behavior and similarity to malicious scripts.
+The Deep Scanner module checks for patterns usually found in malware. Even though it has been adjusted to minimize false positives, it is impossible to mitigate all false positives. Programs that change registry settings or tweaker scripts are susceptible to false positives due to their potentially dangerous behavior and similarity to malicious scripts. Nonetheless, if a file comes out marked as "malicious", we **strongly** recommend avoiding said software unless 100% sure it is clean.
 
 ## What do I need to do to use a part of the antivirus?
 
-You are allowed to distribute programs that use Batch Antivirus; however, please ensure proper attribution by crediting me and providing a link to this repository and any other component used (such as the databases). Your support in promoting this project is greatly valued and contributes to its visibility. Thank you for your cooperation.
+You are allowed to distribute programs that use Batch Antivirus; however, please ensure proper attribution by crediting me and providing a link to this repository and any other component used (such as the databases) in a **visible** place that contains the name **Batch Antivirus**. Your support in promoting this project is greatly valued and contributes to its visibility. Thank you for your cooperation.
+
+## Can I add my own hashes to the database and block certain files?
+
+The feature that allows file blocking (not necessarily malware) but rather custom hashes will come out in version v4.1.0 the same way the Website Blocker works.
 
 ## Contact
 
 Feel free to contact me on Discord (@anic17) or my server <a href="https://discord.gg/gfmaxgE">Program Dream</a>.  
 <a href="https://discord.gg/gfmaxgE"><img src="https://img.shields.io/discord/728958932210679869?style=flat-square&logo=appveyor"></a>
 
+## Contributing
+
+To contribute to Batch Antivirus, open a [pull request](https://github.com/anic17/Batch-Antivirus/pulls) or an [issue](https://github.com/anic17/Batch-Antivirus/issues).
+
+<br />
+<a name="contributors"></a>
+<b>Huge</b> thanks to all the contributors who helped improving Batch Antivirus!
+<hr>
+<table align="center">
+  <tr>
+    <td align="center"><a href="https://github.com/anic17"><img src="https://avatars.githubusercontent.com/u/58483910?v=4?s=100" width="100px;" /><br /><sub><b>anic17</b></sub></a><br /><a href="" title="Maintainer">:hammer:</a> <a href="" title="Code">:computer:</a></td>
+    <td align="center"><a href="https://github.com/BatchDebug"><img src="https://avatars.githubusercontent.com/u/186401443?v=4?s=100" width="100px;" alt=""/><br /><sub><b>BatchDebug</b></sub></a><br /><a href="" title="Code">:computer:</a></td>
+    <td align="center"><a href="https://github.com/moongazer07"><img src="https://avatars.githubusercontent.com/u/74023677?v=4&s=100" width="100px;" /><br /><sub><b>moongazer07</b></sub></a><br /><a href="" title="Hashes">:blue_book:</a></td>
+    <td align="center"><a href="https://github.com/MrDiamond64"><img src="https://avatars.githubusercontent.com/u/49098391?v=4&s=100" width="100px;" /><br /><sub><b>MrDiamond64</b></sub></a><br /><a href="" title="IPs">:blue_book:</a></td>
+  </tr>
+</table>
 
 **Copyright &copy; 2025 anic17 Software**
 <!-- 
