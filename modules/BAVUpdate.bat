@@ -46,17 +46,20 @@ if not exist "%CD%\modules\VirusDataBaseHash.bav" (
 )
 set /p ver_db=<"%CD%\modules\VirusDataBaseHash.bav"
 set /p ver_online=<"!outdir!\update\database.ver"
-for /f "tokens=1* delims==" %%A in ('findstr /c:"updatemsg=" "!outdir!\database.ver"') do (
-	set "updatemsg=%%B"
-	echo.
-	echo.!updatemsg!
-)
+
 set "ver_online=!ver_online::=!"
 set "ver_db=!ver_db::=!"
 set orig_ver_db=!ver_db!
 set orig_ver_online=!ver_online!
 set "ver_online=!ver_online:.=!"
 set "ver_db=!ver_db:.=!"
+if "!ver_db!" neq "!ver_online!" (
+	for /f "tokens=1* delims==" %%A in ('findstr /c:"updatemsg=" "!outdir!\update\database.ver" 2^>nul') do (
+		set "updatemsg=%%B"
+		echo.
+		echo.Release message: !updatemsg!
+	)
+)
 echo.
 set /a ver_diff=(ver_online - ver_db)/100
 set /a major_bld=!ver_db!/100
