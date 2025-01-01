@@ -102,7 +102,6 @@ Feel free to contact me on Discord (@anic17) or my server <a href="https://disco
 
 To contribute to Batch Antivirus, open a [pull request](https://github.com/anic17/Batch-Antivirus/pulls) or an [issue](https://github.com/anic17/Batch-Antivirus/issues).
 
-<br />
 <a name="contributors"></a>
 <b>Huge</b> thanks to all the contributors who helped improving Batch Antivirus!
 <hr>
